@@ -1,0 +1,8 @@
+{
+  "name": "smartOrderClient",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular",
+  "id": "92878ae1"
+}
