@@ -3,3 +3,25 @@
   font-weight: 400;
   font-style: normal;
 }
+
+.space-around {
+  display: flex;
+  justify-content: space-around;
+}
+
+.horizontal-scroll {
+  display: flex;
+  overflow-x: auto;
+  white-space: nowrap;
+  padding: 10px 0;
+}
+
+ion-chip {
+  margin: 5px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+ion-chip:hover {
+  background-color: #f0f0f0;
+}
