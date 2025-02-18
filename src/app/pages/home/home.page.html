@@ -12,41 +12,45 @@
   </ion-header>
 
   <p> Une petite faim ? </p>
-  <div class="space-around">
-    <ion-button expand="block">Commander</ion-button>
-    <ion-button expand="block">Reserver</ion-button>
+
+  <!-- 🔥 Boutons bien placés et reliés aux méthodes -->
+  <div class="button-container">
+    <ion-button expand="block" (click)="commander()">Commander</ion-button>
+    <ion-button expand="block" (click)="reserver()">Réserver</ion-button>
   </div>
+
   <p> Nos plats </p>
 
-  <ion-content>
-
-    <!-- 🔥 Barre de boutons filtrables avec scroll horizontal -->
-    <div class="filter-buttons">
-      <div class="horizontal-scroll">
-        <ion-chip *ngFor="let category of categories" (click)="filterItems(category)">
-          {{ category }}
-        </ion-chip>
-      </div>
+  <!-- 🔥 Barre de boutons filtrables avec scroll horizontal -->
+  <div class="filter-buttons">
+    <div class="horizontal-scroll">
+      <ion-chip *ngFor="let category of categories" (click)="filterItems(category)">
+        {{ category }}
+      </ion-chip>
     </div>
+  </div>
 
-    <!-- 🔥 Carrousel d'items filtrés -->
-    <ion-slides *ngIf="filteredItems.length > 0" [options]="slideOpts">
-      <ion-slides *ngIf="filteredItems.length > 0" [swiperOptions]="swiperOptions">
+  <!-- 🔥 Carrousel d'items filtrés avec Swiper -->
+  <div class="carousel-wrapper">
+    <swiper-container
+      slides-per-view="1.5"
+      space-between="10"
+      pagination="true"
+      navigation="true"
+      preventClicks="false"
+      preventClicksPropagation="false"
+      class="food-carousel"
+    >
+      <swiper-slide *ngFor="let item of filteredItems">
         <div class="carousel-item">
           <img [src]="item.image" alt="{{ item.name }}">
           <p>{{ item.name }}</p>
         </div>
-        </ion-slide>
-      </ion-slides>
+      </swiper-slide>
+    </swiper-container>
+  </div>
 
-      <!-- 🔥 Message si aucun item -->
-      <p *ngIf="filteredItems.length === 0" class="empty-message">Aucun élément trouvé.</p>
-
-  </ion-content>
-
-
+  <!-- 🔥 Bouton de déconnexion -->
   <ion-button (click)="logout()">Déconnexion</ion-button>
 
 </ion-content>
-
-

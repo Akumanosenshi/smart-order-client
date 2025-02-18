@@ -1,17 +1,18 @@
-import {Component} from '@angular/core';
+import {AfterViewInit, Component} from '@angular/core';
 import {Router} from '@angular/router';
 import {AuthService} from '../../services/auth.service';
+import {register} from 'swiper/element/bundle'; // ✅ Utilisation correcte pour activer Swiper
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.page.html',
   styleUrls: ['./home.page.scss'],
 })
-export class HomePage {
-  categories: string[] = ['Tous', 'Pizza', 'Burger', 'Sushi', 'Desserts', 'Boissons']; // 🔥 Liste des filtres
-  selectedCategory: string = 'Tous'; // 🔥 Par défaut, on affiche tout
+export class HomePage implements AfterViewInit {
+  categories: string[] = ['Tous', 'Pizza', 'Burger', 'Sushi', 'Desserts', 'Boissons'];
+  selectedCategory: string = 'Tous';
 
-  items = [ // 🔥 Liste complète des éléments
+  items = [
     {name: 'Pizza Margherita', category: 'Pizza', image: 'assets/img/pizza.jpg'},
     {name: 'Cheeseburger', category: 'Burger', image: 'assets/img/burger.jpg'},
     {name: 'Sushi Saumon', category: 'Sushi', image: 'assets/img/sushi.jpg'},
@@ -19,28 +20,33 @@ export class HomePage {
     {name: 'Coca-Cola', category: 'Boissons', image: 'assets/img/coca.jpg'}
   ];
 
-  filteredItems = [...this.items]; // 🔥 On affiche tout au début
-
-  swiperOptions = { // 🔥 Correction : Nouveau format Ionic
-    slidesPerView: 1.5,
-    spaceBetween: 10,
-    centeredSlides: true
-  };
+  filteredItems = [...this.items];
 
   constructor(private authService: AuthService, private router: Router) {
   }
 
+  ngAfterViewInit(): void {
+    register(); // ✅ Active Swiper après l'initialisation du composant
+  }
+
   filterItems(category: string) {
     this.selectedCategory = category;
-    if (category === 'Tous') {
-      this.filteredItems = [...this.items]; // 🔥 Afficher tout
-    } else {
-      this.filteredItems = this.items.filter(item => item.category === category);
-    }
+    this.filteredItems = category === 'Tous' ? [...this.items] : this.items.filter(item => item.category === category);
   }
 
   logout() {
+    console.log("Déconnexion...");
     this.authService.logout();
-    this.router.navigate(['/login']); // 🔥 Redirection après déconnexion
+    this.router.navigate(['/login']);
+  }
+
+  commander() {
+    console.log('Commande en cours...');
+    alert('Vous avez cliqué sur "Commander"');
+  }
+
+  reserver() {
+    console.log('Réservation en cours...');
+    alert('Vous avez cliqué sur "Réserver"');
   }
 }

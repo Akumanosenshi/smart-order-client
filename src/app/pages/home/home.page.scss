@@ -1,27 +1,37 @@
-.emoji {
-  font-family: "Noto Color Emoji", serif;
-  font-weight: 400;
-  font-style: normal;
+ion-content {
+  pointer-events: auto !important; /* 🔥 Assure que les clics sont bien pris en compte */
 }
 
-.space-around {
+/* 🔥 Corrige la position des boutons pour qu'ils ne soient pas cachés */
+.button-container {
   display: flex;
   justify-content: space-around;
+  padding: 10px;
+  z-index: 10;
+  position: relative;
 }
 
-.horizontal-scroll {
+/* 🔥 Assure que Swiper ne bloque pas les autres clics */
+.carousel-wrapper {
+  position: relative;
+  z-index: 5;
+}
+
+.food-carousel {
+  width: 100%;
+  height: auto;
+}
+
+.carousel-item {
   display: flex;
-  overflow-x: auto;
-  white-space: nowrap;
-  padding: 10px 0;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
 }
 
-ion-chip {
-  margin: 5px;
-  cursor: pointer;
-  font-size: 14px;
-}
-
-ion-chip:hover {
-  background-color: #f0f0f0;
+.carousel-item img {
+  width: 120px;
+  height: 120px;
+  border-radius: 10px;
+  object-fit: cover;
 }
