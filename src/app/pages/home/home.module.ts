@@ -9,11 +9,11 @@ import {HomePage} from './home.page';
   imports: [
     CommonModule,
     FormsModule,
-    IonicModule, // 🔥 Corrige les erreurs sur `ion-header`, `ion-button`, etc.
+    IonicModule,
     RouterModule.forChild([{path: '', component: HomePage}])
   ],
   declarations: [HomePage],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA] // ✅ Permet d'utiliser Swiper en Web Component
+  schemas: [CUSTOM_ELEMENTS_SCHEMA] //  enable use swipper as a composant
 })
 export class HomePageModule {
 }

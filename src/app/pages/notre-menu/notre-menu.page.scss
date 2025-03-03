@@ -1,0 +1,55 @@
+
+.button-container {
+  display: flex;
+  justify-content: space-around;
+  padding: 10px;
+  z-index: 10;
+  position: relative;
+}
+
+// add bold and color to the button
+.button-container > ion-button {
+  color: #f2f2f2;
+  font-weight: bold;
+}
+
+.carousel-wrapper {
+  margin: 3vh 0vw;
+  position: relative;
+  z-index: 5;
+
+}
+
+.food-carousel {
+  width: 100%;
+  height: auto;
+}
+
+.carousel-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.carousel-item img {
+  width: 160px;
+  height: 160px;
+  border-radius: 10px;
+  object-fit: cover;
+}
+
+@media screen and (min-width: 768px) {
+  .carousel-item img {
+    width: 220px; /* Taille pour tablette */
+    height: 220px;
+  }
+}
+
+/* 🖥️ Desktop (min-width: 1024px) */
+@media screen and (min-width: 1024px) {
+  .carousel-item img {
+    width: 330px; /* Taille pour PC */
+    height: 330px;
+  }
+}

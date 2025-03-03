@@ -1,7 +1,7 @@
 import {AfterViewInit, Component} from '@angular/core';
 import {Router} from '@angular/router';
 import {AuthService} from '../../services/auth.service';
-import {register} from 'swiper/element/bundle'; // ✅ Utilisation correcte pour activer Swiper
+import {register} from 'swiper/element/bundle';
 
 @Component({
   selector: 'app-home',

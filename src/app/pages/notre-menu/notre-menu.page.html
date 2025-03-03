@@ -1,4 +1,6 @@
 <ion-header [translucent]="true">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
   <ion-toolbar>
     <ion-title>notre-menu</ion-title>
   </ion-toolbar>
@@ -9,9 +11,44 @@
     <ion-toolbar>
       <ion-title size="large">notre-menu</ion-title>
     </ion-toolbar>
-
   </ion-header>
-  <ion-content>
-    <p> menu </p>
-  </ion-content>
+
+
+  <div style="background-color: #f3edf7; padding: 1vh 0vw; margin: 3vh 0vw">
+    <p> Nos entrees </p>
+
+    <!-- 🔥 Barre de boutons filtrables avec scroll horizontal -->
+    <div class="filter-buttons">
+      <div class="horizontal-scroll">
+        <ion-chip *ngFor="let category of categories" (click)="filterItems(category)">
+          {{ category }}
+        </ion-chip>
+      </div>
+    </div>
+
+    <!-- 🔥 Carrousel d'items filtrés avec Swiper -->
+    <div class="carousel-wrapper">
+      <swiper-container
+        slides-per-view="2.3"
+        preventClicks="false"
+        preventClicksPropagation="false"
+        class="food-carousel"
+        [grid]="{ rows: 2, fill: 'row' }"
+      >
+
+        <swiper-slide *ngFor="let item of filteredItems">
+          <div class="carousel-item">
+            <img [src]="item.image" alt="{{ item.name }}">
+            <p>{{ item.name }}</p>
+          </div>
+        </swiper-slide>
+      </swiper-container>
+    </div>
+
+  </div>
+
+  <!-- 🔥 Bouton de déconnexion -->
+  <ion-button (click)="logout()">Déconnexion</ion-button>
+
 </ion-content>
+

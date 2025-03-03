@@ -1,4 +1,5 @@
 <ion-header [translucent]="true">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
   <ion-toolbar>
     <ion-title>home</ion-title>
   </ion-toolbar>
@@ -11,14 +12,17 @@
     </ion-toolbar>
   </ion-header>
 
-  <p> Une petite faim ? </p>
+
+  <p style="color: #0d0d0d; margin-left: 6vw"> Une petite faim ? </p>
 
   <!-- 🔥 Boutons bien placés et reliés aux méthodes -->
   <div class="button-container">
-    <ion-button expand="block" (click)="commander()">Commander</ion-button>
-    <ion-button expand="block" (click)="reserver()">Réserver</ion-button>
+    <ion-button expand="block" (click)="commander()">Commander 🛍️</ion-button>
+    <ion-button expand="block" (click)="reserver()">Réserver 🗓️</ion-button>
   </div>
 
+
+  <div style="background-color: #f3edf7; padding: 1vh 0vw; margin: 3vh 0vw">
   <p> Nos plats </p>
 
   <!-- 🔥 Barre de boutons filtrables avec scroll horizontal -->
@@ -33,14 +37,14 @@
   <!-- 🔥 Carrousel d'items filtrés avec Swiper -->
   <div class="carousel-wrapper">
     <swiper-container
-      slides-per-view="1.5"
-      space-between="10"
-      pagination="true"
-      navigation="true"
+      slides-per-view="2.3"
       preventClicks="false"
       preventClicksPropagation="false"
       class="food-carousel"
+
+
     >
+
       <swiper-slide *ngFor="let item of filteredItems">
         <div class="carousel-item">
           <img [src]="item.image" alt="{{ item.name }}">
@@ -48,6 +52,8 @@
         </div>
       </swiper-slide>
     </swiper-container>
+  </div>
+
   </div>
 
   <!-- 🔥 Bouton de déconnexion -->

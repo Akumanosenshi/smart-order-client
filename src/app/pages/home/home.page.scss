@@ -1,8 +1,7 @@
 ion-content {
-  pointer-events: auto !important; /* 🔥 Assure que les clics sont bien pris en compte */
+  pointer-events: auto !important;
 }
 
-/* 🔥 Corrige la position des boutons pour qu'ils ne soient pas cachés */
 .button-container {
   display: flex;
   justify-content: space-around;
@@ -11,10 +10,17 @@ ion-content {
   position: relative;
 }
 
-/* 🔥 Assure que Swiper ne bloque pas les autres clics */
+// add bold and color to the button
+.button-container > ion-button {
+  color: #f2f2f2;
+  font-weight: bold;
+}
+
 .carousel-wrapper {
+  margin: 3vh 0vw;
   position: relative;
   z-index: 5;
+
 }
 
 .food-carousel {
@@ -34,4 +40,19 @@ ion-content {
   height: 120px;
   border-radius: 10px;
   object-fit: cover;
+}
+
+@media screen and (min-width: 768px) {
+  .carousel-item img {
+    width: 220px; /* Taille pour tablette */
+    height: 220px;
+  }
+}
+
+/* 🖥️ Desktop (min-width: 1024px) */
+@media screen and (min-width: 1024px) {
+  .carousel-item img {
+    width: 330px; /* Taille pour PC */
+    height: 330px;
+  }
 }
