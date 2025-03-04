@@ -1,6 +1,6 @@
 import {NgModule} from '@angular/core';
 import {PreloadAllModules, RouterModule, Routes} from '@angular/router';
-import {AuthGuard} from './services/auth.guard.service'; // Assure-toi que ce fichier existe
+import {AuthGuardService} from './services/auth.guard.service'; // Assure-toi que ce fichier existe
 
 const routes: Routes = [
   {path: '', redirectTo: 'loader', pathMatch: 'full'}, // Page par défaut
@@ -10,7 +10,7 @@ const routes: Routes = [
   {
     path: 'tabs',
     loadChildren: () => import('./pages/tabs/tabs.module').then(m => m.TabsPageModule),
-    canActivate: [AuthGuard], // Empêche d'accéder aux tabs sans login
+    canActivate: [AuthGuardService], // Empêche d'accéder aux tabs sans login
   },
   {path: '**', redirectTo: 'loader', pathMatch: 'full'}, {
     path: 'notre-menu',
