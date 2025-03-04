@@ -7,6 +7,7 @@ import {IonicModule} from '@ionic/angular';
 import {NotreMenuPageRoutingModule} from './notre-menu-routing.module';
 
 import {NotreMenuPage} from './notre-menu.page';
+import {SliderMenuComponent} from "../../components/slider-menu/slider-menu.component";
 
 @NgModule({
   imports: [
@@ -15,8 +16,8 @@ import {NotreMenuPage} from './notre-menu.page';
     IonicModule,
     NotreMenuPageRoutingModule
   ],
-  declarations: [NotreMenuPage],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA] //  enable use swipper as a composant
+  declarations: [NotreMenuPage, SliderMenuComponent],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class NotreMenuPageModule {
 }
