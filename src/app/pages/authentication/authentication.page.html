@@ -1,0 +1,28 @@
+<ion-content [fullscreen]="true" class="">
+  <ion-grid class="">
+    <ion-row class="">
+      <ion-col size="12" size-sm="6" size-md="6" class="ion-justify-content-center">
+        <ion-img src="assets/logo-fedet.png"></ion-img>
+      </ion-col>
+      <ion-col size="12" size-sm="6" size-md="6" class="connection-buttons">
+        <ion-button id="open-login" expand="block">{{ "Se Connecter".toUpperCase() }}</ion-button>
+        <ion-modal #loginModal trigger="open-login" class="auth-modal">
+          <ng-template>
+            <app-login-modal [loginFunction]="login.bind(this)" [loginModal]="loginModal"></app-login-modal>
+          </ng-template>
+        </ion-modal>
+        <ion-button id="open-register" expand="block">{{ "Créer un Compte".toUpperCase() }}</ion-button>
+        <ion-modal #registerModal trigger="open-register" class="auth-modal">
+          <ng-template>
+            <app-register-modal [registerFunction]="register.bind(this)" [registerModal]="registerModal"></app-register-modal>
+          </ng-template>
+        </ion-modal>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+  <ion-footer class="ion-no-border">
+    <ion-toolbar>
+      <ion-title slot="primary" color="tertiary">© 2025 smartOrder</ion-title>
+    </ion-toolbar>
+  </ion-footer>
+</ion-content>

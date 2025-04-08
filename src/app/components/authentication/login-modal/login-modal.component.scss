@@ -1,0 +1,49 @@
+ion-toolbar {
+  --color: #ffffff;
+}
+
+.cancel {
+  font-size: 2em;
+  cursor: pointer;
+}
+
+ion-content {
+  --background: #ffffff;
+  --color: #000000;
+  height: 91% !important;
+}
+
+ion-grid {
+  display: flex;
+  flex-direction: column;
+  width: 60%;
+  height: 100% !important;
+  justify-content: center;
+}
+
+ion-col {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+ion-input, ion-item, .item-native {
+  height: 45px !important;
+  min-height: 45px !important;
+  --height: 45px !important;
+  --min-height: 45px !important;
+  --background: #ffffff;
+  --color: #000000;
+}
+
+.forgot-password {
+  cursor: pointer;
+  color: var(--ion-color-primary);
+  text-decoration: underline;
+}
+
+@media (max-width: 575.5px) {
+  ion-grid {
+    width: 100%;
+  }
+}

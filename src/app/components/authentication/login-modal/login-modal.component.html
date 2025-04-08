@@ -1,0 +1,48 @@
+<ion-header [translucent]="true" class="ion-no-border">
+  <ion-toolbar id="pageHeader" mode="ios" color="primary">
+    <ion-title>Se Connecter</ion-title>
+    <ion-buttons slot="end">
+      <ion-button class="ion-no-padding" (click)="cancel()" fill="clear" size="large">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content class="ion-padding ion-justify-content-center">
+  <ion-grid>
+    <ion-row class="ion-justify-content-center">
+      <ion-col>
+        <ion-input
+          required="true"
+          [(ngModel)]="credentials.email"
+          fill="outline"
+          label="Adresse Email"
+          labelPlacement="stacked"
+          type="email"
+          placeholder="Entrez votre adresse email"></ion-input>
+      </ion-col>
+    </ion-row>
+    <ion-row class="ion-justify-content-center">
+      <ion-col>
+        <ion-input
+          required="true"
+          [(ngModel)]="credentials.motDePasse"
+          fill="outline"
+          label="Mot de Passe"
+          labelPlacement="stacked"
+          type="password"
+          placeholder="Entrez votre mot de passe"></ion-input>
+      </ion-col>
+    </ion-row>
+    <ion-row class="ion-justify-content-center">
+      <ion-col>
+        <ion-button (click)="login()" color="primary">Se Connecter</ion-button>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-text (click)="cancel()" class="forgot-password">Mot de Passe Oublié</ion-text>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>
