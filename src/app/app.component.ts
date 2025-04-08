@@ -1,18 +1,11 @@
-import {AfterViewInit, Component} from '@angular/core';
-import {register} from "swiper/element/bundle";
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
   styleUrls: ['app.component.scss'],
+  standalone: false,
 })
-export class AppComponent implements AfterViewInit {
+export class AppComponent {
   constructor() {}
-
-  ngAfterViewInit(): void {
-    register(); // ✅ Active Swiper après l'initialisation du composant
-  }
 }
-
-
-
