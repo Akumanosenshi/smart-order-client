@@ -2,6 +2,6 @@ export interface User {
   firstname: string;
   lastname: string;
   email: string;
-  mdp: string;
+  password: string;
   role: string;
 }

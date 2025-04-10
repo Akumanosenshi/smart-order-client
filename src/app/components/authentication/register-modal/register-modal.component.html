@@ -14,7 +14,7 @@
       <ion-col size="12" size-md="6">
         <ion-input
           required="true"
-          [(ngModel)]="registerStudent.firstname"
+          [(ngModel)]="registerUser.firstname"
           fill="outline"
           label="Prénom"
           labelPlacement="stacked"
@@ -24,7 +24,7 @@
       <ion-col size="12" size-md="6">
         <ion-input
           required="true"
-          [(ngModel)]="registerStudent.lastname"
+          [(ngModel)]="registerUser.lastname"
           autocapitalize="on"
           fill="outline"
           label="Nom"
@@ -33,80 +33,11 @@
           placeholder="Votre nom"></ion-input>
       </ion-col>
     </ion-row>
-    <ion-row>
-      <ion-col size="12" size-md="6">
-        <ion-input
-          required="true"
-          fill="outline"
-          label="Date de Naissance"
-          labelPlacement="stacked"
-          type="date"
-          inputmode="text"
-          [(ngModel)]="registerStudent.birthdate"
-          placeholder="Votre date de naissance">
-          <ion-button color="primary" id="select-date" fill="clear" slot="end" size="small">
-            <ion-datetime-button datetime="datetime" style="display: none"></ion-datetime-button>
-            <ion-icon slot="icon-only" name="calendar"></ion-icon>
-          </ion-button>
-        </ion-input>
-
-        <ion-modal trigger="select-date" [keepContentsMounted]="true">
-          <ng-template>
-            <ion-datetime [(ngModel)]="calendar" (ionChange)="doneCalendar()" presentation="datetime" id="datetime"
-                          show-default-buttons="true" doneText="Confirmer" cancelText="Annuler"
-                          style="border: #0d0d0d 1px solid">
-            </ion-datetime>
-          </ng-template>
-        </ion-modal>
-      </ion-col>
-      <ion-col size="12" size-md="6">
-        <ion-input
-          required="true"
-          [(ngModel)]="registerStudent.household"
-          fill="outline"
-          label="Population du Foyer"
-          labelPlacement="stacked"
-          type="number"
-          min="0"
-          max="10"
-          placeholder="Nombre de membre du foyer"></ion-input>
-      </ion-col>
-    </ion-row>
-    <ion-row>
-      <ion-col size="12" size-md="6">
-        <ion-item fill="outline" lines="none">
-          <ion-toggle [(ngModel)]="registerStudent.isStudent">Êtes vous étudiant ?</ion-toggle>
-        </ion-item>
-      </ion-col>
-      <ion-col size="12" size-md="6">
-        <ion-item fill="outline" lines="none">
-          <ion-toggle [(ngModel)]="registerStudent.isWorker">Êtes vous employé ?</ion-toggle>
-        </ion-item>
-      </ion-col>
-    </ion-row>
-    <ion-row *ngIf="registerStudent.isStudent">
-      <ion-col size="12" size-md="6">
-        <ion-select [required]="registerStudent.isStudent" [(ngModel)]="registerStudent.formation"
-                    label="Formation" label-placement="stacked"
-                    placeholder="Votre formation actuel" fill="outline" interface="alert">
-          <ion-select-option *ngFor="let formation of studentService.enumIterator(Formation)"
-                             [value]="formation">{{formation}}</ion-select-option>
-        </ion-select>
-      </ion-col>
-      <ion-col size="12" size-md="6">
-        <ion-select [required]="registerStudent.isStudent" [(ngModel)]="registerStudent.graduation"
-                    label="Diplôme Préparer" label-placement="stacked"
-                    placeholder="Votre diplôme préparer" fill="outline" interface="popover">
-          <ion-select-option *ngFor="let graduation of studentService.enumIterator(Graduation)"
-                             [value]="graduation.toUpperCase()">{{graduation.toUpperCase()}}</ion-select-option>
-        </ion-select>
-      </ion-col>
-    </ion-row>
     <ion-row class="ion-justify-content-center">
       <ion-col>
         <ion-input
           required="true"
-          [(ngModel)]="registerStudent.email"
+          [(ngModel)]="registerUser.email"
           fill="outline"
           label="Adresse Email"
           labelPlacement="stacked"
@@ -118,7 +49,7 @@
       <ion-col>
         <ion-input
           required="true"
-          [(ngModel)]="registerStudent.password"
+          [(ngModel)]="registerUser.password"
           fill="outline"
           label="Mot de Passe"
           labelPlacement="stacked"

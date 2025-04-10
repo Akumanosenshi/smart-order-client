@@ -1,12 +1,10 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {FormsModule} from '@angular/forms';
 
-import { IonicModule } from '@ionic/angular';
+import {IonicModule} from '@ionic/angular';
 
-import { DashboardPageRoutingModule } from './dashboard-routing.module';
-
-import { DashboardPage } from './dashboard.page';
+import {DashboardPageRoutingModule} from './dashboard-routing.module';
 
 @NgModule({
   imports: [
@@ -15,6 +13,7 @@ import { DashboardPage } from './dashboard.page';
     IonicModule,
     DashboardPageRoutingModule
   ],
-  declarations: [DashboardPage]
+  declarations: []
 })
-export class DashboardPageModule {}
+export class DashboardPageModule {
+}

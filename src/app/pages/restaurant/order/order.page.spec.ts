@@ -1,5 +1,5 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { OrderPage } from './order.page';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
+import {OrderPage} from './order.page';
 
 describe('OrderPage', () => {
   let component: OrderPage;

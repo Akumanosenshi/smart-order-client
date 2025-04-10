@@ -1,12 +1,10 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {FormsModule} from '@angular/forms';
 
-import { IonicModule } from '@ionic/angular';
+import {IonicModule} from '@ionic/angular';
 
-import { MenuUserPageRoutingModule } from './menu-user-routing.module';
-
-import { MenuUserPage } from './menu-user.page';
+import {MenuUserPageRoutingModule} from './menu-user-routing.module';
 
 @NgModule({
   imports: [
@@ -15,6 +13,7 @@ import { MenuUserPage } from './menu-user.page';
     IonicModule,
     MenuUserPageRoutingModule
   ],
-  declarations: [MenuUserPage]
+  declarations: []
 })
-export class MenuUserPageModule {}
+export class MenuUserPageModule {
+}

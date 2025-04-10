@@ -10,7 +10,7 @@ import {User} from "../models/user";
 })
 export class AuthenticationService {
   private authSubject = new BehaviorSubject<boolean>(false);
-  private apiUrl = 'https://localhost:8080';
+  private apiUrl = 'http://localhost:8080';
 
   constructor(
     private http: HttpClient,
@@ -25,7 +25,7 @@ export class AuthenticationService {
     if (token) this.authSubject.next(true);
   }
 
-  login(credentials: { email: string, motDePasse : string }): Observable<any> {
+  login(credentials: { email: string, motDePasse: string }): Observable<any> {
     console.log('DEBUG_INFO: Request connexion for: ', JSON.stringify(credentials));
     return this.http.post(`${this.apiUrl}/auth/login`, credentials).pipe(
       tap(async (response: any) => {
@@ -34,7 +34,7 @@ export class AuthenticationService {
         await this.storageService.setRole(response.role);
         this.authSubject.next(true);
         console.log("Utilisateur connecté avec succés: ", response)
-        this.router.navigate([await this.getRole() === 'ADMIN' ? '/tabs/restaurant/dashboard' : '/tabs/user/home'])
+        this.router.navigate([await this.getRole() === 'RESTAURANT' ? '/tabs/restaurant/dashboard' : '/tabs/user/home'])
           .catch(error => console.error('Erreur de redirection:', error));
       })
     );
@@ -49,7 +49,7 @@ export class AuthenticationService {
         await this.storageService.setRole(response.role);
         this.authSubject.next(true);
         console.log("Utilisateur enregistré avec succés: ", JSON.stringify(response))
-        this.router.navigate([await this.getRole() === 'ADMIN' ? '/tabs/restaurant/dashboard' : '/tabs/user/home'])
+        this.router.navigate([await this.getRole() === 'RESTAURANT' ? '/tabs/restaurant/dashboard' : '/tabs/user/home'])
           .catch(error => console.error('Erreur de redirection:', error));
       })
     );

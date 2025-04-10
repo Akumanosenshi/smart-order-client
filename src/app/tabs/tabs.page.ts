@@ -1,6 +1,7 @@
-import {Component, OnInit} from '@angular/core';
-import {Router} from '@angular/router';
+import {Component} from '@angular/core';
+import {ViewWillEnter} from "@ionic/angular";
 import {AuthenticationService} from "../services/authentication.service";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-tabs',
@@ -8,28 +9,27 @@ import {AuthenticationService} from "../services/authentication.service";
   styleUrls: ['tabs.page.scss'],
   standalone: false,
 })
-export class TabsPage implements OnInit {
-  isStudent: boolean = true;
+export class TabsPage implements ViewWillEnter {
+  isUser: boolean = true;
   public appTabs: any[] = [];
 
   constructor(protected authService: AuthenticationService, private router: Router) {
   }
 
-  async ngOnInit() {
-    this.isStudent = !(await this.isAdmin());
-    if (!this.isStudent) {
+  async ionViewWillEnter() {
+    this.isUser = !(await this.isAdmin());
+    if (!this.isUser) {
       this.appTabs = [
-        {title: 'Accueil', url: '/tabs/admin/dashboard', icon: 'stats-chart'},
-        {title: 'Distributions', url: '/tabs/admin/distributions', icon: 'business'},
-        {title: 'Caisse', url: '/tabs/admin/cash-register', icon: 'cash'},
-        {title: 'Adhérants', url: '/tabs/admin/students', icon: 'people'},
-        {title: 'Visites', url: '/tabs/admin/visits', icon: 'pricetags'}
+        {title: 'Dashboard', url: '/tabs/restaurant/dashboard', icon: 'stats-chart'},
+        {title: 'Menu', url: '/tabs/restaurant/menu', icon: 'business'},
+        {title: 'Commandes', url: '/tabs/restaurant/order', icon: 'cash'},
+        {title: 'Résérvations', url: '/tabs/restaurant/reservation', icon: 'people'},
       ];
     } else {
       this.appTabs = [
-        { title: 'Profile', url: '/tabs/student/profile', icon: 'person' },
-        // { title: 'Courses', url: '/tabs/student/courses', icon: 'book' },
-        // { title: 'Notifications', url: '/tabs/student/notifications', icon: 'notifications' }
+        {title: 'Acceuil', url: '/tabs/user/home', icon: 'home'},
+        {title: 'Menu', url: '/tabs/user/menu-user', icon: 'person'},
+        {title: 'Profil', url: '/tabs/user/profil', icon: 'person'},
       ];
     }
     await this.router.navigate([this.appTabs[0].url]);
@@ -37,6 +37,6 @@ export class TabsPage implements OnInit {
 
   async isAdmin() {
     const role = await this.authService.getRole();
-    return role === 'ADMIN';
+    return role === 'RESTAURANT';
   }
 }

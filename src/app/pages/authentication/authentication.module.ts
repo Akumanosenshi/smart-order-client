@@ -1,13 +1,10 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {FormsModule} from '@angular/forms';
 
-import { IonicModule } from '@ionic/angular';
+import {IonicModule} from '@ionic/angular';
 
-import { AuthenticationPageRoutingModule } from './authentication-routing.module';
-
-import { AuthenticationPage } from './authentication.page';
-import { RegisterModalComponent } from '../../components/authentication/register-modal/register-modal.component';
+import {AuthenticationPageRoutingModule} from './authentication-routing.module';
 
 @NgModule({
   imports: [
@@ -18,4 +15,5 @@ import { RegisterModalComponent } from '../../components/authentication/register
   ],
   declarations: []
 })
-export class AuthenticationPageModule {}
+export class AuthenticationPageModule {
+}

@@ -6,13 +6,13 @@ import {IonicModule, IonicRouteStrategy} from '@ionic/angular';
 
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
-import {AuthenticationService} from "./services/authentication.service";
-import {AuthenticationGuard} from "./guards/authentication.guard";
-import {RoleGuard} from "./guards/role.guard";
 import {HTTP_INTERCEPTORS, HttpClient, HttpClientModule} from "@angular/common/http";
+import {RoleGuard} from "./guards/role.guard";
+import {AuthenticationGuard} from "./guards/authentication.guard";
+import {AuthenticationService} from "./services/authentication.service";
+import {StorageService} from "./services/storage.service";
 import {JwtInterceptor} from "./interceptor/jwt.interceptor";
 import {IonicStorageModule} from "@ionic/storage-angular";
-import {StorageService} from "./services/storage.service";
 
 @NgModule({
   declarations: [AppComponent],
@@ -29,8 +29,8 @@ import {StorageService} from "./services/storage.service";
     AuthenticationGuard,
     RoleGuard,
     HttpClient,
-    { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
-    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
+    {provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true},
+    {provide: RouteReuseStrategy, useClass: IonicRouteStrategy}
   ],
   bootstrap: [AppComponent],
 })

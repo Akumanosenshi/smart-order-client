@@ -1,7 +1,7 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { IonicModule } from '@ionic/angular';
+import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
+import {IonicModule} from '@ionic/angular';
 
-import { LoginModalComponent } from './login-modal.component';
+import {LoginModalComponent} from './login-modal.component';
 
 describe('LoginModalComponent', () => {
   let component: LoginModalComponent;
@@ -9,7 +9,7 @@ describe('LoginModalComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ LoginModalComponent ],
+      declarations: [LoginModalComponent],
       imports: [IonicModule.forRoot()]
     }).compileComponents();
 

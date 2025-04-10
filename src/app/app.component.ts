@@ -1,6 +1,5 @@
-import {Component, OnInit} from '@angular/core';
-import {AuthenticationService} from "./services/authentication.service";
-import {Router} from "@angular/router";
+import {Component} from '@angular/core';
+import {StorageService} from "./services/storage.service";
 
 @Component({
   selector: 'app-root',
@@ -8,14 +7,13 @@ import {Router} from "@angular/router";
   styleUrls: ['app.component.scss'],
   standalone: false,
 })
-export class AppComponent implements OnInit {
-  constructor(private authService: AuthenticationService, private router: Router) {}
+export class AppComponent {
+  constructor(private storageService: StorageService) {
+    // this.init();
+  }
 
-  async ngOnInit() {
-    const role = await this.authService.getRole();
-    if (role) {
-      const redirectTo = role === 'RESTAURANT' ? '/tabs/restaurant/dashboard' : '/tabs/user/profile';
-      this.router.navigate([redirectTo]).catch((error: any) => console.error('Erreur de redirection:', error));
-    }
+  async init() {
+    await this.storageService.setToken("eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkByb290LmZyIiwicm9sZSI6IkFETUlOIiwiZXhwIjoxNzQ0MjE4OTY2fQ.HwbZOhmEYwNok436Tqf5iWQI_yXm1fmtqs02wQJJxKo");
+    await this.storageService.setRole("RESTAURANT");
   }
 }

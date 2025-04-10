@@ -1,12 +1,10 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {FormsModule} from '@angular/forms';
 
-import { IonicModule } from '@ionic/angular';
+import {IonicModule} from '@ionic/angular';
 
-import { ProfilPageRoutingModule } from './profil-routing.module';
-
-import { ProfilPage } from './profil.page';
+import {ProfilPageRoutingModule} from './profil-routing.module';
 
 @NgModule({
   imports: [
@@ -15,6 +13,7 @@ import { ProfilPage } from './profil.page';
     IonicModule,
     ProfilPageRoutingModule
   ],
-  declarations: [ProfilPage]
+  declarations: []
 })
-export class ProfilPageModule {}
+export class ProfilPageModule {
+}

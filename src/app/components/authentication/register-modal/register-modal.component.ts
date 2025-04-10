@@ -1,11 +1,8 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input} from '@angular/core';
 import {IonicModule, IonModal} from "@ionic/angular";
 import {FormsModule} from "@angular/forms";
-import {NgForOf, NgIf} from "@angular/common";
 import {User} from "../../../models/user";
-import {UserService} from "../../../services/student.service";
-
-;
+import {UserService} from "../../../services/user.service";
 
 @Component({
   selector: 'app-register-modal',
@@ -13,12 +10,10 @@ import {UserService} from "../../../services/student.service";
   styleUrls: ['./register-modal.component.scss'],
   imports: [
     IonicModule,
-    FormsModule,
-    NgIf,
-    NgForOf
+    FormsModule
   ]
 })
-export class RegisterModalComponent implements OnInit {
+export class RegisterModalComponent {
 
   @Input() registerModal: IonModal | undefined;
   @Input() registerFunction: Function | undefined;
@@ -28,7 +23,7 @@ export class RegisterModalComponent implements OnInit {
 
   errorMessage: string = '';
 
-  constructor(protected UserService: UserService) {
+  constructor(protected userService: UserService) {
   }
 
   register() {
@@ -46,28 +41,16 @@ export class RegisterModalComponent implements OnInit {
 
   validateInputs(): boolean {
     if (!this.registerUser.firstname || !this.registerUser.lastname || !this.registerUser.email ||
-      !this.registerUser.mdp || !this.confirmPassword || !this.registerUser.birthdate) {
+      !this.registerUser.password || !this.confirmPassword) {
       this.errorMessage = "Tous les champs doivent être remplis.";
       return false;
     }
 
-    if (this.registerUser.mdp !== this.confirmPassword) {
+    if (this.registerUser.password !== this.confirmPassword) {
       this.errorMessage = "Les mots de passe ne correspondent pas.";
       return false;
     }
 
     return true;
   }
-
-  doneCalendar() {
-    if (this.registerUser)
-      this.registerUser.birthdate = this.studentService.formatISODate(new Date(this.calendar));
-  }
-
-  ngOnInit(): void {
-    this.registerUser.birthdate = this.studentService.formatISODate(new Date(Date.now()));
-  }
-
-  protected readonly Formation = Formation;
-  protected readonly Graduation = Graduation;
 }

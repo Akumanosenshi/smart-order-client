@@ -1,13 +1,14 @@
-import { Injectable } from '@angular/core';
-import { HttpInterceptor, HttpRequest, HttpHandler, HttpEvent } from '@angular/common/http';
-import { AuthenticationService } from '../services/authentication.service';
-import { from, Observable } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import {Injectable} from '@angular/core';
+import {HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from '@angular/common/http';
+import {AuthenticationService} from '../services/authentication.service';
+import {from, Observable} from 'rxjs';
+import {switchMap} from 'rxjs/operators';
 
 @Injectable()
 export class JwtInterceptor implements HttpInterceptor {
 
-  constructor(private authService: AuthenticationService) {}
+  constructor(private authService: AuthenticationService) {
+  }
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     return from(this.authService.getToken()).pipe(

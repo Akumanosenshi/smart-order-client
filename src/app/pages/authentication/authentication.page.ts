@@ -11,7 +11,7 @@ import {RegisterModalComponent} from "../../components/authentication/register-m
   imports: [
     IonicModule,
     LoginModalComponent,
-    RegisterModalComponent
+    RegisterModalComponent,
   ],
   styleUrls: ['./authentication.page.scss']
 })
@@ -20,7 +20,8 @@ export class AuthenticationPage {
   @ViewChild("registerModal") registerModal: IonModal | undefined;
   errorMessage: string = '';
 
-  constructor(private authService: AuthenticationService, private router: Router) {}
+  constructor(private authService: AuthenticationService, private router: Router) {
+  }
 
   login(credentials: { email: string, motDePasse: string }) {
     this.authService.login(credentials).subscribe({

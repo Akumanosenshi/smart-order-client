@@ -1,5 +1,5 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { MenuUserPage } from './menu-user.page';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
+import {MenuUserPage} from './menu-user.page';
 
 describe('MenuUserPage', () => {
   let component: MenuUserPage;
