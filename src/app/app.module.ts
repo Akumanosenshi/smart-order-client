@@ -13,10 +13,13 @@ import {AuthenticationService} from "./services/authentication.service";
 import {StorageService} from "./services/storage.service";
 import {JwtInterceptor} from "./interceptor/jwt.interceptor";
 import {IonicStorageModule} from "@ionic/storage-angular";
+import {FormsModule} from '@angular/forms';
 
 @NgModule({
   declarations: [AppComponent],
   imports: [
+    FormsModule,
+    IonicModule,
     BrowserModule,
     IonicModule.forRoot(),
     AppRoutingModule,
