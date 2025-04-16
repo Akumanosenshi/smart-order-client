@@ -1,13 +1,62 @@
-<ion-header [translucent]="true">
+<ion-header>
   <ion-toolbar>
-    <ion-title>order</ion-title>
+    <ion-title>Commandes</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">order</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content class="ion-padding">
+
+  <ion-list>
+    <ion-item>
+      <ion-label><strong>⏳ Commandes à venir</strong></ion-label>
+    </ion-item>
+
+    <ng-container *ngFor="let order of futureOrders">
+      <ion-item>
+        <ion-label>
+          <div>{{ order.user.firstname }}</div>
+          <div>{{ formatDate(order.date) }} — Total : {{ order.total | number:'1.2-2' }} €</div>
+        </ion-label>
+
+        <ion-button slot="end" color="success" *ngIf="!order.validated" (click)="validateOrder(order)">
+          Valider
+        </ion-button>
+      </ion-item>
+
+      <ion-item *ngFor="let meal of order.meals" lines="none">
+        <ion-label>
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span>{{ meal.emoji }} {{ meal.title }}</span>
+            <span>{{ meal.price | number:'1.2-2' }} €</span>
+          </div>
+          <div style="padding-left: 1.5rem; color: #666;">{{ meal.description }}</div>
+        </ion-label>
+      </ion-item>
+    </ng-container>
+
+    <br>
+    <br>
+    <ion-item>
+      <ion-label><strong>📅 Commandes passées</strong></ion-label>
+    </ion-item>
+
+    <ng-container *ngFor="let order of pastOrders">
+      <ion-item>
+        <ion-label>
+          <div>{{ order.user.firstname }}</div>
+          <div>{{ formatDate(order.date) }} — Total : {{ order.total | number:'1.2-2' }} €</div>
+        </ion-label>
+      </ion-item>
+
+      <ion-item *ngFor="let meal of order.meals" lines="none">
+        <ion-label>
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span>{{ meal.emoji }} {{ meal.title }}</span>
+            <span><strong>{{ meal.price | number:'1.2-2' }} €</strong></span>
+          </div>
+          <div style="padding-left: 1.5rem; color: #666;">{{ meal.description }}</div>
+        </ion-label>
+      </ion-item>
+    </ng-container>
+  </ion-list>
 </ion-content>

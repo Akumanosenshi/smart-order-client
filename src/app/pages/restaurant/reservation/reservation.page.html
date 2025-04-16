@@ -1,13 +1,45 @@
-<ion-header [translucent]="true">
+<ion-header>
   <ion-toolbar>
-    <ion-title>reservation</ion-title>
+    <ion-title>Réservations</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">reservation</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content class="ion-padding">
+
+  <ion-list>
+    <ion-item>
+      <ion-label><strong>⏳ Réservations à venir</strong></ion-label>
+    </ion-item>
+
+    <ng-container *ngFor="let res of futureReservations">
+      <ion-item>
+        <ion-label>
+          <div>
+            <strong>{{ res.user.firstname }}</strong> — {{ res.nbrPeople }} personnes
+          </div>
+          <div style="font-size: 0.9em; color: gray;">{{ formatDate(res.date) }}</div>
+        </ion-label>
+
+        <ion-button slot="end" *ngIf="!res.validated" color="success" (click)="validateReservation(res)">
+          Valider
+        </ion-button>
+      </ion-item>
+    </ng-container>
+
+    <ion-item>
+      <ion-label><strong>📅 Réservations passées</strong></ion-label>
+    </ion-item>
+
+    <ng-container *ngFor="let res of pastReservations">
+      <ion-item>
+        <ion-label>
+          <div>
+            <strong>{{ res.user.firstname }}</strong> — {{ res.nbrPeople }} personnes
+          </div>
+          <div style="font-size: 0.9em; color: gray;">{{ formatDate(res.date) }}</div>
+        </ion-label>
+      </ion-item>
+    </ng-container>
+
+  </ion-list>
 </ion-content>

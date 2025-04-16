@@ -1,0 +1,30 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Supprimer un plat</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="closeModal()">Fermer</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+
+  <ion-item>
+    <ion-label>Choisir un plat</ion-label>
+    <ion-select [(ngModel)]="selectedTitle">
+      <ion-select-option *ngFor="let t of titles" [value]="t">{{ t }}</ion-select-option>
+    </ion-select>
+  </ion-item>
+
+  <ion-button expand="block" color="danger" (click)="deleteMeal()">Supprimer</ion-button>
+
+  <ion-text color="success" *ngIf="successMessage">
+    <p>{{ successMessage }}</p>
+    <ion-button (click)="closeModal()">Fermer</ion-button>
+  </ion-text>
+
+  <ion-text color="danger" *ngIf="errorMessage">
+    <p>{{ errorMessage }}</p>
+    <ion-button (click)="closeModal()">Fermer</ion-button>
+  </ion-text>
+</ion-content>
