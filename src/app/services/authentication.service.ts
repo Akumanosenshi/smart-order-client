@@ -23,6 +23,7 @@ export class AuthenticationService {
   async init() {
     const token = await this.storageService.getToken();
     if (token) this.authSubject.next(true);
+    console.log('token log', token, this.authSubject.value);
   }
 
   login(credentials: { email: string, motDePasse: string }): Observable<any> {

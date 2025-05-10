@@ -1,13 +1,108 @@
-<ion-header [translucent]="true">
+<ion-header>
   <ion-toolbar>
-    <ion-title>home</ion-title>
+    <ion-title>Une petite faim ?</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">home</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content class="ion-padding">
+
+  <!-- Boutons commander / réserver -->
+  <ion-grid>
+    <ion-row>
+      <ion-col size="6">
+        <ion-button expand="block" (click)="goTo('menu')">Commander</ion-button>
+      </ion-col>
+      <ion-col size="6">
+        <ion-button expand="block" (click)="goTo('reservation')">Réserver</ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <!-- Carrousel catégories -->
+<!--  <swiper [config]="config">-->
+<!--    <ng-template swiperSlide *ngFor="let cat of categories">-->
+<!--      <ion-chip-->
+<!--        [color]="selectedCategory === cat.name ? 'primary' : 'medium'"-->
+<!--        (click)="toggleCategory(cat.name)">-->
+<!--        {{ cat.emoji }} {{ cat.name }}-->
+<!--        <ion-icon *ngIf="selectedCategory === cat.name" name="close-outline"></ion-icon>-->
+<!--      </ion-chip>-->
+<!--    </ng-template>-->
+<!--  </swiper>-->
+
+  <!-- Carrousel plats filtrés -->
+<!--  <swiper [config]="config">-->
+<!--    <ng-template swiperSlide *ngFor="let meal of filteredMeals()">-->
+<!--      <ion-card>-->
+<!--        <ion-card-header>-->
+<!--          {{ meal.emoji }} {{ meal.title }} - {{ meal.price | number:'1.2-2' }} €-->
+<!--        </ion-card-header>-->
+<!--        <ion-card-content>-->
+<!--          {{ meal.description }}-->
+<!--        </ion-card-content>-->
+<!--      </ion-card>-->
+<!--    </ng-template>-->
+<!--  </swiper>-->
+
+  <ion-button expand="block" (click)="goTo('menu')">Voir le menu</ion-button>
+
+  <!-- Section nos pizzas -->
+  <ion-title>Nos pizzas</ion-title>
+
+<!--  <swiper [config]="config">-->
+<!--    <ng-template swiperSlide *ngFor="let meal of categoryMeals('pizza')">-->
+<!--      <ion-card>-->
+<!--        <ion-card-header>-->
+<!--          {{ meal.emoji }} {{ meal.title }} - {{ meal.price | number:'1.2-2' }} €-->
+<!--        </ion-card-header>-->
+<!--        <ion-card-content>-->
+<!--          {{ meal.description }}-->
+<!--        </ion-card-content>-->
+<!--      </ion-card>-->
+<!--    </ng-template>-->
+<!--  </swiper>-->
+
+  <!-- Section nos burgers -->
+  <ion-title>Nos burgers</ion-title>
+<!--  <swiper [config]="config">-->
+<!--    <ng-template swiperSlide *ngFor="let meal of categoryMeals('burger')">-->
+<!--      <ion-card>-->
+<!--        <ion-card-header>-->
+<!--          {{ meal.emoji }} {{ meal.title }} - {{ meal.price | number:'1.2-2' }} €-->
+<!--        </ion-card-header>-->
+<!--        <ion-card-content>-->
+<!--          {{ meal.description }}-->
+<!--        </ion-card-content>-->
+<!--      </ion-card>-->
+<!--    </ng-template>-->
+<!--  </swiper>-->
+
+  <!-- Section nos desserts -->
+  <ion-title>Nos desserts</ion-title>
+<!--  <swiper [config]="config">-->
+<!--    <ng-template swiperSlide *ngFor="let meal of categoryMeals('dessert')">-->
+<!--      <ion-card>-->
+<!--        <ion-card-header>-->
+<!--          {{ meal.emoji }} {{ meal.title }} - {{ meal.price | number:'1.2-2' }} €-->
+<!--        </ion-card-header>-->
+<!--        <ion-card-content>-->
+<!--          {{ meal.description }}-->
+<!--        </ion-card-content>-->
+<!--      </ion-card>-->
+<!--    </ng-template>-->
+<!--  </swiper>-->
+
+  <!-- Bas de page -->
+  <ion-title>Menu</ion-title>
+  <ion-grid>
+    <ion-row>
+      <ion-col size="6">
+        <ion-button expand="block" (click)="goTo('menu')">Commander</ion-button>
+      </ion-col>
+      <ion-col size="6">
+        <ion-button expand="block" (click)="goTo('reservation')">Réserver</ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
 </ion-content>

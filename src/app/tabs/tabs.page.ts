@@ -27,7 +27,7 @@ export class TabsPage implements ViewWillEnter {
       ];
     } else {
       this.appTabs = [
-        {title: 'Acceuil', url: '/tabs/user/home', icon: 'home'},
+        {title: 'Accueil', url: '/tabs/user/home', icon: 'home'},
         {title: 'Menu', url: '/tabs/user/menu-user', icon: 'person'},
         {title: 'Profil', url: '/tabs/user/profil', icon: 'person'},
       ];

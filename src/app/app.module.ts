@@ -14,17 +14,18 @@ import {StorageService} from "./services/storage.service";
 import {JwtInterceptor} from "./interceptor/jwt.interceptor";
 import {IonicStorageModule} from "@ionic/storage-angular";
 import {FormsModule} from '@angular/forms';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+
 
 @NgModule({
   declarations: [AppComponent],
   imports: [
     FormsModule,
-    IonicModule,
     BrowserModule,
     IonicModule.forRoot(),
     AppRoutingModule,
     HttpClientModule,
-    IonicStorageModule.forRoot()
+    IonicStorageModule.forRoot(),
   ],
   providers: [
     AuthenticationService,

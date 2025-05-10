@@ -31,18 +31,14 @@ export class AuthenticationPage {
       },
       error: err => {
         console.error('Échec de la connexion:', err);
-        this.errorMessage = 'Identifiants incorrects, veuillez réessayer.';
+        this.errorMessage = 'Identifiant incorrects, veuillez réessayer.';
       }
     });
   }
 
+
+
   register(registerData: any) {
-    if (!registerData.formation) {
-      registerData.formation = "AUTRE";
-    }
-    if (!registerData.graduation) {
-      registerData.graduation = "BAC";
-    }
     this.authService.register(registerData).subscribe({
       next: () => {
         this.registerModal?.dismiss(null, 'confirm');
