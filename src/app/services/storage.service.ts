@@ -1,5 +1,6 @@
 import {Injectable} from '@angular/core';
 import {Storage} from '@ionic/storage-angular';
+import {UserPublic} from "../models/userPublic";
 
 @Injectable({
   providedIn: 'root'
@@ -39,4 +40,9 @@ export class StorageService {
   async removeRole(): Promise<void> {
     await this.storage.remove(this.roleKey);
   }
+
+  async getUser(): Promise<UserPublic> {
+    return await this.storage.get('user'); // ou le nom de clé que tu utilises
+  }
+
 }

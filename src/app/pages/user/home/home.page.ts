@@ -13,18 +13,8 @@ import { IonicModule } from '@ionic/angular';
 })
 export class HomePage implements OnInit {
   meals: Meal[] = [];
-  selectedCategory: string | null = null;
-  categories = [
-    { name: 'pizza', emoji: '🍕' },
-    { name: 'burger', emoji: '🍔' },
-    { name: 'dessert', emoji: '🍰' }
-  ];
+  mealsByCategory: { [category: string]: Meal[] } = {};
 
-  // config: SwiperOptions = {
-  //   slidesPerView: 3,
-  //   spaceBetween: 10,
-  //   freeMode: true
-  // };
 
   constructor(private router: Router, private mealService: MealService) {}
 
@@ -35,21 +25,9 @@ export class HomePage implements OnInit {
     });
   }
 
-  toggleCategory(cat: string) {
-    this.selectedCategory = this.selectedCategory === cat ? null : cat;
-  }
 
-  filteredMeals(): Meal[] {
-    return this.selectedCategory
-      ? this.meals.filter(m => m.category === this.selectedCategory)
-      : this.meals;
-  }
-
-  categoryMeals(category: string): Meal[] {
-    return this.meals.filter(m => m.category === category);
-  }
 
   goTo(path: string) {
-    this.router.navigate([`/${path}`]);
+    this.router.navigate(['/tabs/user/' + path]);
   }
 }

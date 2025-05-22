@@ -1,0 +1,31 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Mon Panier</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="close()">Fermer</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list>
+    <ion-item *ngFor="let item of cart">
+      <ion-label>
+        {{ item.meal.emoji }} {{ item.meal.title }} <br />
+        <small>{{ item.meal.price | number:'1.2-2' }} €</small>
+      </ion-label>
+      <ion-buttons slot="end">
+        <ion-button size="small" (click)="changeQuantity(item.meal.title, -1)">-</ion-button>
+        <ion-button disabled>{{ item.quantity }}</ion-button>
+        <ion-button size="small" (click)="changeQuantity(item.meal.title, 1)">+</ion-button>
+        <ion-button color="danger" (click)="remove(item.meal.title)">
+          <ion-icon name="close"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+    </ion-item>
+  </ion-list>
+</ion-content>
+
+<ion-footer>
+  <ion-button expand="block" color="success" (click)="validate()">Valider mon panier</ion-button>
+</ion-footer>

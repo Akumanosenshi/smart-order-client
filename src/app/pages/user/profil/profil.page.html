@@ -1,13 +1,10 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>profil</ion-title>
+    <ion-title>Profil</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">profil</ion-title>
-    </ion-toolbar>
-  </ion-header>
-</ion-content>
+
+<ion-button color="danger" expand="block" (click)="logout()">
+  Se déconnecter
+</ion-button>

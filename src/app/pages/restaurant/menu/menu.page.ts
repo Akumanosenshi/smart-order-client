@@ -11,7 +11,6 @@ import {CommonModule} from '@angular/common';
   selector: 'app-menu',
   templateUrl: './menu.page.html',
   styleUrls: ['./menu.page.scss'],
-  standalone: true,
   imports: [IonicModule, CommonModule]
 })
 export class MenuPage implements OnInit {

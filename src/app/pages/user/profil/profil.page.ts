@@ -1,5 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {IonicModule} from "@ionic/angular";
+import {AuthenticationService} from "../../../services/authentication.service";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-profil',
@@ -11,10 +13,15 @@ import {IonicModule} from "@ionic/angular";
 })
 export class ProfilPage implements OnInit {
 
-  constructor() {
-  }
+  constructor(private authService: AuthenticationService) {}
+
 
   ngOnInit() {
   }
+
+  logout() {
+    this.authService.logout();
+  }
+
 
 }
