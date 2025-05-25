@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
 import {IonicModule, ModalController, ToastController} from '@ionic/angular';
-import { CartService, CartItem } from '../../services/cart.service';
-import { OrderService } from '../../services/order.service';
-import {DecimalPipe} from "@angular/common";
+import {CartItem, CartService} from '../../services/cart.service';
+import {OrderService} from '../../services/order.service';
+import {CommonModule, DecimalPipe} from '@angular/common';
+import {FormsModule} from '@angular/forms';
 
 @Component({
   selector: 'app-cart-modal',
@@ -11,11 +12,14 @@ import {DecimalPipe} from "@angular/common";
   standalone: true,
   imports: [
     IonicModule,
-    DecimalPipe
+    DecimalPipe,
+    CommonModule,
+    FormsModule
   ]
 })
 export class CartModalComponent {
   cart: CartItem[] = [];
+  date: string = '';
 
   constructor(
     private cartService: CartService,
@@ -36,22 +40,27 @@ export class CartModalComponent {
     this.cart = this.cartService.getCart();
   }
 
+  getTotal(): number {
+    return this.cart.reduce((sum, item) => sum + item.meal.price * item.quantity, 0);
+  }
+
   async validate() {
-    const order = this.cart
+    const meals: any[] = this.cart
       .map((item: CartItem) => Array(item.quantity).fill(item.meal))
-      .reduce((acc: any[], val: any[]) => acc.concat(val), []);
+      .reduce((acc, val) => acc.concat(val), []);
 
-      try {
-      const meals: any[] = this.cart
-        .map(item => Array(item.quantity).fill(item.meal))
-        .reduce((acc, val) => acc.concat(val), []);
+    const total = this.getTotal();
 
-      const total = this.cart
-        .reduce((sum, item) => sum + item.quantity * item.meal.price, 0);
+    // 🕒 Convertir pickupTime (HH:mm) en datetime ISO du jour
+    const [hours, minutes] = this.date.split(':').map(Number);
+    const date = new Date();
+    date.setHours(hours, minutes, 0);
+    const pickupDateTime = date.toISOString();
 
-      await this.orderService.sendOrder(meals, total);
-
+    try {
+      await this.orderService.sendOrder(meals, total, pickupDateTime); // ✅ inclut l'heure
       this.cartService.clearCart();
+
       const toast = await this.toastCtrl.create({
         message: 'Order placed successfully!',
         duration: 2000,

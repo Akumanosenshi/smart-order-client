@@ -27,5 +27,27 @@
 </ion-content>
 
 <ion-footer>
-  <ion-button expand="block" color="success" (click)="validate()">Valider mon panier</ion-button>
+  <ion-toolbar>
+    <ion-label>
+      Heure de retrait :
+    </ion-label>
+    <ion-datetime
+      presentation="time"
+      [(ngModel)]="date"
+      hour-cycle="h23"
+      locale="fr-FR">
+    </ion-datetime>
+  </ion-toolbar>
+
+  <ion-toolbar>
+    <ion-title size="small">
+      Prix total : <strong>{{ getTotal() | number: '1.2-2' }} €</strong>
+    </ion-title>
+  </ion-toolbar>
+
+  <ion-button expand="block" color="success" (click)="validate()">
+    Valider mon panier
+  </ion-button>
 </ion-footer>
+
+

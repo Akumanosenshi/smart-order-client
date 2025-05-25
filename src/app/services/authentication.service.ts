@@ -23,6 +23,8 @@ export class AuthenticationService {
   async init() {
     const token = await this.storageService.getToken();
     if (token) this.authSubject.next(true);
+    const user = await this.storageService.getUser();
+    console.log(user);
     console.log('token log', token, this.authSubject.value);
   }
 
@@ -33,6 +35,7 @@ export class AuthenticationService {
         console.log('DEBUG_INFO: Received response for connexion registration request: ', JSON.stringify(response));
         await this.storageService.setToken(response.token);
         await this.storageService.setRole(response.role);
+        await this.storageService.setUser(response.user);
         this.authSubject.next(true);
         console.log("Utilisateur connecté avec succés: ", response)
         this.router.navigate([await this.getRole() === 'RESTAURANT' ? '/tabs/restaurant/dashboard' : '/tabs/user/home'])
@@ -48,6 +51,7 @@ export class AuthenticationService {
         console.log('DEBUG_INFO: Received response for registration registration request: ', response);
         await this.storageService.setToken(response.token);
         await this.storageService.setRole(response.role);
+        await this.storageService.setUser(response.user);
         this.authSubject.next(true);
         console.log("Utilisateur enregistré avec succés: ", JSON.stringify(response))
         this.router.navigate([await this.getRole() === 'RESTAURANT' ? '/tabs/restaurant/dashboard' : '/tabs/user/home'])

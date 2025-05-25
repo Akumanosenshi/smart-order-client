@@ -8,6 +8,9 @@ import {UserPublic} from "../models/userPublic";
 export class StorageService {
   private tokenKey = 'auth-token';
   private roleKey = 'role';
+  private userKey = 'user';
+  private userPublic: UserPublic | null = null;
+
 
   constructor(private storage: Storage) {
     this.init();
@@ -15,6 +18,11 @@ export class StorageService {
 
   async init() {
     await this.storage.create();
+
+    const user = await this.storage.get(this.userKey);
+    if (user) {
+      this.userPublic = user;
+    }
   }
 
   async setToken(token: string): Promise<void> {
@@ -41,8 +49,25 @@ export class StorageService {
     await this.storage.remove(this.roleKey);
   }
 
-  async getUser(): Promise<UserPublic> {
-    return await this.storage.get('user'); // ou le nom de clé que tu utilises
+  async setUser(user: UserPublic): Promise<void> {
+    this.userPublic = user;
+    console.log(this.userPublic);
+    await this.storage.set(this.userKey, user);
+  }
+
+  async getUser(): Promise<UserPublic | null> {
+    if (this.userPublic) {
+      return this.userPublic;
+    }
+    const user = await this.storage.get(this.userKey);
+    this.userPublic = user;
+    console.log(this.userPublic);
+    return user;
+  }
+
+  async removeUser(): Promise<void> {
+    this.userPublic = null;
+    await this.storage.remove(this.userKey);
   }
 
 }

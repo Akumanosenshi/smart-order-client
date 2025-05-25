@@ -21,13 +21,14 @@ export class OrderService {
     return this.http.put(`${this.apiUrl}/Order/validate?id=${id}`, null);
   }
 
-  async sendOrder(meals: any[], total: number) {
+  async sendOrder(meals: any[], total: number, date: string): Promise<any> {
     const user = await this.storage.getUser();
 
+    console.log(user);
     const payload = {
       user: user,
       meals: meals,
-      date: new Date().toISOString(),
+      date: date,
       total: total,
       validated: false
     };
