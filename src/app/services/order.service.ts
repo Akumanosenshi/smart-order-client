@@ -17,10 +17,6 @@ export class OrderService {
     return this.http.get<Order[]>(`${this.apiUrl}/Order/all`);
   }
 
-  validateOrder(id: string): Observable<any> {
-    return this.http.put(`${this.apiUrl}/Order/validate?id=${id}`, null);
-  }
-
   async sendOrder(meals: any[], total: number, date: string): Promise<any> {
     const user = await this.storage.getUser();
 
@@ -30,10 +26,14 @@ export class OrderService {
       meals: meals,
       date: date,
       total: total,
-      validated: false
+      state: 'PENDING'
     };
-
     return firstValueFrom(this.http.post(`${this.apiUrl}/Order`, payload));
   }
+
+  updateOrderState(id: string, state: 'PENDING' | 'IN_PROGRESS' | 'READY_FOR_PICKUP' | 'COMPLETED' | 'CANCELLED') {
+    return this.http.put(`${this.apiUrl}/Order/changeState?id=${id}&state=${state}`, null);
+  }
+
 }
 

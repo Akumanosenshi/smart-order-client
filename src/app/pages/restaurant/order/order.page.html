@@ -5,8 +5,8 @@
 </ion-header>
 
 <ion-content class="ion-padding">
-
   <ion-list>
+    <!-- COMMANDES À VENIR -->
     <ion-item>
       <ion-label><strong>⏳ Commandes à venir</strong></ion-label>
     </ion-item>
@@ -16,11 +16,17 @@
         <ion-label>
           <div>{{ order.user.firstname }}</div>
           <div>{{ formatDate(order.date) }} — Total : {{ order.total | number:'1.2-2' }} €</div>
+          <div><strong>État : {{ order.state }}</strong></div>
         </ion-label>
 
-        <ion-button slot="end" color="success" *ngIf="!order.validated" (click)="validateOrder(order)">
-          Valider
-        </ion-button>
+        <ion-buttons slot="end">
+          <ion-button color="primary" (click)="changeState(order)">
+            →
+          </ion-button>
+          <ion-button color="danger" (click)="cancelOrder(order)">
+            <ion-icon name="close"></ion-icon>
+          </ion-button>
+        </ion-buttons>
       </ion-item>
 
       <ion-item *ngFor="let meal of order.meals" lines="none">
@@ -34,8 +40,9 @@
       </ion-item>
     </ng-container>
 
-    <br>
-    <br>
+    <br><br>
+
+    <!-- COMMANDES PASSÉES -->
     <ion-item>
       <ion-label><strong>📅 Commandes passées</strong></ion-label>
     </ion-item>
@@ -45,6 +52,7 @@
         <ion-label>
           <div>{{ order.user.firstname }}</div>
           <div>{{ formatDate(order.date) }} — Total : {{ order.total | number:'1.2-2' }} €</div>
+          <div><strong>État : {{ order.state }}</strong></div>
         </ion-label>
       </ion-item>
 

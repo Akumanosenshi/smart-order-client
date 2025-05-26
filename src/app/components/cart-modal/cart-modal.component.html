@@ -31,12 +31,15 @@
     <ion-label>
       Heure de retrait :
     </ion-label>
-    <ion-datetime
-      presentation="time"
-      [(ngModel)]="date"
-      hour-cycle="h23"
-      locale="fr-FR">
-    </ion-datetime>
+    <ion-item>
+      <ion-label>Heure de retrait</ion-label>
+      <ion-select [(ngModel)]="date" interface="popover">
+        <ion-select-option *ngFor="let time of availableTimes" [value]="time">
+          {{ time }}
+        </ion-select-option>
+      </ion-select>
+    </ion-item>
+
   </ion-toolbar>
 
   <ion-toolbar>

@@ -7,5 +7,5 @@ export interface Order {
   meals: Meal[];
   date: string; // ISO date string
   total: number;
-  validated: boolean;
+  state: 'PENDING' | 'IN_PROGRESS' | 'READY_FOR_PICKUP' | 'COMPLETED' | 'CANCELLED';
 }

@@ -9,7 +9,6 @@ import {FormsModule} from '@angular/forms';
   selector: 'app-cart-modal',
   templateUrl: './cart-modal.component.html',
   styleUrls: ['./cart-modal.component.scss'],
-  standalone: true,
   imports: [
     IonicModule,
     DecimalPipe,
@@ -20,6 +19,46 @@ import {FormsModule} from '@angular/forms';
 export class CartModalComponent {
   cart: CartItem[] = [];
   date: string = '';
+  availableTimes: string[] = [];
+  closingHour = '22:00';
+
+  ngOnInit() {
+    this.cartService.getCartObservable().subscribe(cart => {
+      this.cart = cart;
+    });
+
+    this.generateAvailableTimes();
+  }
+
+  generateAvailableTimes() {
+    const now = new Date();
+    const currentHour = now.getHours();
+    const currentMinutes = now.getMinutes();
+
+    const [closingHour, closingMinutes] = this.closingHour.split(':').map(Number);
+
+    const end = new Date();
+    end.setHours(closingHour, closingMinutes, 0, 0);
+
+    const times: string[] = [];
+
+    const slot = new Date();
+    if (currentMinutes < 30) {
+      slot.setMinutes(30, 0, 0);
+    } else {
+      slot.setHours(currentHour + 1, 0, 0, 0);
+    }
+
+    while (slot <= end) {
+      const hours = slot.getHours().toString().padStart(2, '0');
+      const minutes = slot.getMinutes().toString().padStart(2, '0');
+      times.push(`${hours}:${minutes}`);
+      slot.setMinutes(slot.getMinutes() + 30);
+    }
+
+    this.availableTimes = times;
+  }
+
 
   constructor(
     private cartService: CartService,
