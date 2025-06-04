@@ -1,0 +1,32 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Vos Réservations</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="close()">Fermer</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+
+  <ion-item lines="none"><strong>📅 Réservations à venir</strong></ion-item>
+  <ion-list *ngIf="future.length > 0; else noFuture">
+    <ion-item *ngFor="let res of future">
+      <ion-label>
+        {{ formatDate(res.date) }} — {{ res.nbrPeople }} personnes
+      </ion-label>
+    </ion-item>
+  </ion-list>
+  <ng-template #noFuture><p class="ion-padding-start">Aucune réservation à venir.</p></ng-template>
+
+  <ion-item lines="none" class="ion-margin-top"><strong>📖 Réservations passées</strong></ion-item>
+  <ion-list *ngIf="past.length > 0; else noPast">
+    <ion-item *ngFor="let res of past">
+      <ion-label>
+        {{ formatDate(res.date) }} — {{ res.nbrPeople }} personnes
+      </ion-label>
+    </ion-item>
+  </ion-list>
+  <ng-template #noPast><p class="ion-padding-start">Aucune réservation passée.</p></ng-template>
+
+</ion-content>

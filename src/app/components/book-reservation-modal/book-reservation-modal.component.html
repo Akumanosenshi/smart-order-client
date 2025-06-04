@@ -1,0 +1,46 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Réserver une table</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="closeModal()">Fermer</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <!-- Date -->
+  <ion-item>
+    <ion-label position="stacked">Date</ion-label>
+    <ion-datetime
+      presentation="date"
+      [(ngModel)]="reservationDate"
+      [min]="minDate"
+      locale="fr-FR"
+    ></ion-datetime>
+  </ion-item>
+
+  <!-- Heure -->
+  <ion-item>
+    <ion-label position="stacked">Heure</ion-label>
+    <ion-select [(ngModel)]="reservationHour" interface="popover" placeholder="Choisir une heure">
+      <ion-select-option *ngFor="let hour of availableHours" [value]="hour">
+        {{ hour }}
+      </ion-select-option>
+    </ion-select>
+  </ion-item>
+
+  <!-- Nombre de personnes -->
+  <ion-item>
+    <ion-label>Nombre de personnes</ion-label>
+    <ion-buttons slot="end">
+      <ion-button (click)="updatePeople(-1)">-</ion-button>
+      <ion-label>{{ numberOfPeople }}</ion-label>
+      <ion-button (click)="updatePeople(1)">+</ion-button>
+    </ion-buttons>
+  </ion-item>
+
+  <!-- Bouton de validation -->
+  <ion-button expand="block" color="success" (click)="submitReservation()">
+    Valider la réservation
+  </ion-button>
+</ion-content>

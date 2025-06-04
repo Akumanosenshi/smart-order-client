@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {firstValueFrom, Observable} from 'rxjs';
 import {Order} from '../models/order';
-import {StorageService} from "../services/storage.service";
+import {StorageService} from "./storage.service";
 
 @Injectable({
   providedIn: 'root'
@@ -33,6 +33,10 @@ export class OrderService {
 
   updateOrderState(id: string, state: 'PENDING' | 'IN_PROGRESS' | 'READY_FOR_PICKUP' | 'COMPLETED' | 'CANCELLED') {
     return this.http.put(`${this.apiUrl}/Order/changeState?id=${id}&state=${state}`, null);
+  }
+
+  getOrdersByUserId(id: string) {
+    return this.http.get(`${this.apiUrl}/Order/user?id=${id}`);
   }
 
 }
