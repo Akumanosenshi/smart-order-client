@@ -7,7 +7,8 @@
 <ion-content class="ion-padding">
 
   <ion-list>
-    <ion-item>
+    <!-- Réservations à venir -->
+    <ion-item color="light">
       <ion-label><strong>⏳ Réservations à venir</strong></ion-label>
     </ion-item>
 
@@ -15,7 +16,7 @@
       <ion-item>
         <ion-label>
           <div>
-            <strong>{{ res.user.firstname }}</strong> — {{ res.nbrPeople }} personnes
+            <strong>{{ res.userFirstname }} {{ res.userLastname }}</strong> — {{ res.nbrPeople }} personnes
           </div>
           <div style="font-size: 0.9em; color: gray;">{{ formatDate(res.date) }}</div>
         </ion-label>
@@ -23,10 +24,14 @@
         <ion-button slot="end" *ngIf="!res.validated" color="success" (click)="validateReservation(res)">
           Valider
         </ion-button>
+
+        <ion-icon *ngIf="res.validated === true" slot="end" name="checkmark-circle" color="success"></ion-icon>
       </ion-item>
+
     </ng-container>
 
-    <ion-item>
+    <!-- Réservations passées -->
+    <ion-item color="light">
       <ion-label><strong>📅 Réservations passées</strong></ion-label>
     </ion-item>
 
@@ -34,12 +39,12 @@
       <ion-item>
         <ion-label>
           <div>
-            <strong>{{ res.user.firstname }}</strong> — {{ res.nbrPeople }} personnes
+            <strong>{{ res.userFirstname }} {{ res.userLastname }}</strong> — {{ res.nbrPeople }} personnes
           </div>
           <div style="font-size: 0.9em; color: gray;">{{ formatDate(res.date) }}</div>
         </ion-label>
       </ion-item>
     </ng-container>
-
   </ion-list>
+
 </ion-content>

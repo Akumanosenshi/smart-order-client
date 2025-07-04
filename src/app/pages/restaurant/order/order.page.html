@@ -6,34 +6,38 @@
 
 <ion-content class="ion-padding">
   <ion-list>
-    <!-- COMMANDES À VENIR -->
-    <ion-item>
+
+    <!-- ⏳ COMMANDES À VENIR -->
+    <ion-item color="light">
       <ion-label><strong>⏳ Commandes à venir</strong></ion-label>
     </ion-item>
 
     <ng-container *ngFor="let order of futureOrders">
       <ion-item>
-        <ion-label>
-          <div>{{ order.user.firstname }}</div>
-          <div>{{ formatDate(order.date) }} — Total : {{ order.total | number:'1.2-2' }} €</div>
-          <div><strong>État : {{ order.state }}</strong></div>
-        </ion-label>
-
-        <ion-buttons slot="end">
-          <ion-button color="primary" (click)="changeState(order)">
-            →
-          </ion-button>
-          <ion-button color="danger" (click)="cancelOrder(order)">
-            <ion-icon name="close"></ion-icon>
-          </ion-button>
-        </ion-buttons>
+        <ion-grid>
+          <ion-row class="ion-justify-content-between ion-align-items-center">
+            <ion-col size="8">
+              <div><strong>{{ order.userFirstname }} {{ order.userLastname }}</strong></div>
+              <div>{{ formatDate(order.date) }} — Total : {{ order.total | number:'1.2-2' }} €</div>
+              <div><strong>État :</strong> {{ order.state }}</div>
+            </ion-col>
+            <ion-col size="4" class="ion-text-end">
+              <ion-button size="small" color="primary" (click)="changeState(order)">
+                →
+              </ion-button>
+              <ion-button size="small" color="danger" (click)="cancelOrder(order)">
+                <ion-icon slot="icon-only" name="close"></ion-icon>
+              </ion-button>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
       </ion-item>
 
       <ion-item *ngFor="let meal of order.meals" lines="none">
         <ion-label>
           <div style="display: flex; justify-content: space-between; align-items: center;">
-            <span>{{ meal.emoji }} {{ meal.title }}</span>
-            <span>{{ meal.price | number:'1.2-2' }} €</span>
+            <span>{{ meal.emoji }} <strong>{{ meal.title }}</strong></span>
+            <span><strong>{{ meal.price | number:'1.2-2' }} €</strong></span>
           </div>
           <div style="padding-left: 1.5rem; color: #666;">{{ meal.description }}</div>
         </ion-label>
@@ -42,29 +46,34 @@
 
     <br><br>
 
-    <!-- COMMANDES PASSÉES -->
-    <ion-item>
+    <!-- 📅 COMMANDES PASSÉES -->
+    <ion-item color="light">
       <ion-label><strong>📅 Commandes passées</strong></ion-label>
     </ion-item>
 
     <ng-container *ngFor="let order of pastOrders">
       <ion-item>
-        <ion-label>
-          <div>{{ order.user.firstname }}</div>
-          <div>{{ formatDate(order.date) }} — Total : {{ order.total | number:'1.2-2' }} €</div>
-          <div><strong>État : {{ order.state }}</strong></div>
-        </ion-label>
+        <ion-grid>
+          <ion-row class="ion-justify-content-between ion-align-items-center">
+            <ion-col size="12">
+              <div><strong>{{ order.userFirstname }} {{ order.userLastname }}</strong></div>
+              <div>{{ formatDate(order.date) }} — Total : {{ order.total | number:'1.2-2' }} €</div>
+              <div><strong>État :</strong> {{ order.state }}</div>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
       </ion-item>
 
       <ion-item *ngFor="let meal of order.meals" lines="none">
         <ion-label>
           <div style="display: flex; justify-content: space-between; align-items: center;">
-            <span>{{ meal.emoji }} {{ meal.title }}</span>
+            <span>{{ meal.emoji }} <strong>{{ meal.title }}</strong></span>
             <span><strong>{{ meal.price | number:'1.2-2' }} €</strong></span>
           </div>
           <div style="padding-left: 1.5rem; color: #666;">{{ meal.description }}</div>
         </ion-label>
       </ion-item>
     </ng-container>
+
   </ion-list>
 </ion-content>

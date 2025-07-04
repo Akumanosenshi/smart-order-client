@@ -3,6 +3,7 @@ import {Reservation} from '../../../models/reservation';
 import {ReservationService} from '../../../services/reservation.service';
 import {CommonModule, formatDate} from '@angular/common';
 import {IonicModule} from '@ionic/angular';
+import { ToastController } from '@ionic/angular';
 
 @Component({
   selector: 'app-reservation',
@@ -15,7 +16,7 @@ export class ReservationPage implements OnInit {
   futureReservations: Reservation[] = [];
   pastReservations: Reservation[] = [];
 
-  constructor(private reservationService: ReservationService) {
+  constructor(private reservationService: ReservationService, private toastCtrl: ToastController) {
   }
 
   ngOnInit() {
@@ -25,6 +26,8 @@ export class ReservationPage implements OnInit {
   loadReservations() {
     this.reservationService.getAllReservations().subscribe({
       next: (reservations) => {
+        console.log('Données brutes:', reservations);
+
         const now = new Date();
         this.futureReservations = reservations.filter(res =>
           new Date(res.date) >= now
@@ -41,12 +44,31 @@ export class ReservationPage implements OnInit {
     });
   }
 
-  validateReservation(res: Reservation) {
-    this.reservationService.validateReservation(res.id).subscribe({
-      next: () => this.loadReservations(),
-      error: () => alert("Erreur lors de la validation.")
-    });
+  async validateReservation(res: Reservation) {
+    if (res.validated) return; // Ne rien faire si déjà validée
+
+    try {
+      await this.reservationService.validateReservation(res.id).toPromise();
+
+      const toast = await this.toastCtrl.create({
+        message: 'Réservation validée avec succès.',
+        duration: 2000,
+        color: 'success',
+      });
+      await toast.present();
+
+      this.loadReservations(); // Recharge la liste mise à jour
+    } catch (error) {
+      const toast = await this.toastCtrl.create({
+        message: "Erreur lors de la validation.",
+        duration: 2000,
+        color: 'danger',
+      });
+      await toast.present();
+    }
   }
+
+
 
   formatDate(date: string): string {
     return formatDate(date, 'dd/MM/yyyy HH:mm', 'fr-FR');

@@ -28,17 +28,22 @@ export class ReservationService {
   async createReservation(reservation: {
     date: string;
     nbrPeople: number;
-    user: UserPublic | null;
-    validated: boolean
+    userId: string;
+    userFirstname: string;
+    userLastname: string;
+    validated: boolean;
   }) {
     const payload = {
       date: reservation.date,
       nbrPeople: reservation.nbrPeople,
-      user: reservation.user,
+      userId: reservation.userId,
+      userFirstname: reservation.userFirstname,
+      userLastname: reservation.userLastname,
       validated: reservation.validated
     };
 
+    console.log('Payload API final :', payload);
     return this.http.post(`${this.apiUrl}/reservations`, payload).toPromise();
-
   }
+
 }

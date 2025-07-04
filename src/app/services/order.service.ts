@@ -1,8 +1,8 @@
-import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import {firstValueFrom, Observable} from 'rxjs';
-import {Order} from '../models/order';
-import {StorageService} from "./storage.service";
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { firstValueFrom, Observable } from 'rxjs';
+import { Order } from '../models/order';
+import { StorageService } from './storage.service';
 
 @Injectable({
   providedIn: 'root'
@@ -10,8 +10,7 @@ import {StorageService} from "./storage.service";
 export class OrderService {
   private apiUrl = 'http://localhost:8080';
 
-  constructor(private http: HttpClient, private storage: StorageService) {
-  }
+  constructor(private http: HttpClient, private storage: StorageService) {}
 
   getAllOrders(): Observable<Order[]> {
     return this.http.get<Order[]>(`${this.apiUrl}/Order/all`);
@@ -20,14 +19,18 @@ export class OrderService {
   async sendOrder(meals: any[], total: number, date: string): Promise<any> {
     const user = await this.storage.getUser();
 
-    console.log(user);
+    if (!user) {
+      throw new Error("Utilisateur non connecté. Impossible de passer la commande.");
+    }
+
     const payload = {
-      user: user,
+      userId: user.id,
       meals: meals,
       date: date,
       total: total,
       state: 'PENDING'
     };
+
     return firstValueFrom(this.http.post(`${this.apiUrl}/Order`, payload));
   }
 
@@ -36,8 +39,6 @@ export class OrderService {
   }
 
   getOrdersByUserId(id: string) {
-    return this.http.get(`${this.apiUrl}/Order/user?id=${id}`);
+    return this.http.get<Order[]>(`${this.apiUrl}/Order/user?id=${id}`);
   }
-
 }
-

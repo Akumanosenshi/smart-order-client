@@ -3,9 +3,12 @@ import {UserPublic} from "./userPublic";
 
 export interface Order {
   id: string;
-  user: UserPublic;
+  userId: string;
+  userFirstname: string;
+  userLastname: string;
   meals: Meal[];
-  date: string; // ISO date string
+  date: string;
   total: number;
   state: 'PENDING' | 'IN_PROGRESS' | 'READY_FOR_PICKUP' | 'COMPLETED' | 'CANCELLED';
 }
+

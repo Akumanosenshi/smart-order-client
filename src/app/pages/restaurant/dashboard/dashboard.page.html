@@ -1,56 +1,59 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
+<ion-header>
+  <ion-toolbar color="light">
     <ion-title>dashboard</ion-title>
-    <ion-button slot="end" (click)="logout()">Déconnexion</ion-button>
+    <ion-button slot="end" fill="outline" color="primary" (click)="logout()">
+      Déconnexion
+    </ion-button>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
   <ion-header collapse="condense">
-    <ion-toolbar>
+    <ion-toolbar color="light">
       <ion-title size="small">dashboard</ion-title>
     </ion-toolbar>
   </ion-header>
 
   <ion-grid>
-
-
+    <!-- Sélection de dates -->
     <ion-row>
-      <ion-col size="6">
-        <ion-item>
-          <ion-label position="floating">Date de début</ion-label>
+      <ion-col size="12" size-md="6">
+        <ion-item lines="none">
+          <ion-label position="stacked">Date de début</ion-label>
           <ion-datetime
-            display-format="YYYY-MM-DD"
+            presentation="date"
             [(ngModel)]="startDate"
-            presentation="date"
+            prefer-wheel="false"
           ></ion-datetime>
         </ion-item>
       </ion-col>
 
-      <ion-col size="6">
-        <ion-item>
-          <ion-label position="floating">Date de fin</ion-label>
+      <ion-col size="12" size-md="6">
+        <ion-item lines="none">
+          <ion-label position="stacked">Date de fin</ion-label>
           <ion-datetime
-            display-format="YYYY-MM-DD"
-            [(ngModel)]="endDate"
             presentation="date"
+            [(ngModel)]="endDate"
+            prefer-wheel="false"
           ></ion-datetime>
         </ion-item>
       </ion-col>
     </ion-row>
 
-    <ion-row class="ion-padding-start">
-      <ion-button (click)="loadTopMeals()">Rechercher</ion-button>
+    <!-- Bouton de recherche -->
+    <ion-row class="ion-justify-content-center ion-padding-vertical">
+      <ion-button expand="block" color="primary" (click)="loadTopMeals()">
+        Rechercher
+      </ion-button>
     </ion-row>
 
-    <!-- Liste des plats -->
+    <!-- Top 5 des plats -->
     <ion-row>
       <ion-col size="12">
         <ion-card>
           <ion-card-header>
-            <ion-card-title>Top 5 des plats</ion-card-title>
+            <div class="stat-title">Top 5 des plats</div>
           </ion-card-header>
-
           <ion-card-content>
             <ion-list>
               <ion-item *ngFor="let meal of topMeals">
@@ -66,11 +69,12 @@
       </ion-col>
     </ion-row>
 
+    <!-- Statistiques -->
     <ion-row>
-      <ion-col size="6">
-        <ion-card>
+      <ion-col size="6" size-md="6">
+        <ion-card class="stat-card">
           <ion-card-header>
-            <ion-card-title>🧾 Total des commandes</ion-card-title>
+            <div class="stat-title">🧾 Total des commandes</div>
           </ion-card-header>
           <ion-card-content>
             <h2>{{ totalOrders }}</h2>
@@ -78,21 +82,21 @@
         </ion-card>
       </ion-col>
 
-      <ion-col size="6">
-        <ion-card>
+      <ion-col size="6" size-md="6">
+        <ion-card class="stat-card">
           <ion-card-header>
-            <ion-card-title>💸 Panier moyen</ion-card-title>
+            <div class="stat-title">💸 Panier moyen</div>
           </ion-card-header>
           <ion-card-content>
-            <h2>{{ averageCart | number:'1.2-2' }} €</h2>
+            <h2>{{ averageCart | number: '1.2-2' }} €</h2>
           </ion-card-content>
         </ion-card>
       </ion-col>
 
-      <ion-col size="6">
-        <ion-card>
+      <ion-col size="6" size-md="6">
+        <ion-card class="stat-card">
           <ion-card-header>
-            <ion-card-title>📅 Total réservations</ion-card-title>
+            <div class="stat-title">📅 Total réservations</div>
           </ion-card-header>
           <ion-card-content>
             <h2>{{ totalReservations }}</h2>
@@ -100,10 +104,10 @@
         </ion-card>
       </ion-col>
 
-      <ion-col size="6">
-        <ion-card>
+      <ion-col size="6" size-md="6">
+        <ion-card class="stat-card">
           <ion-card-header>
-            <ion-card-title>👥 Personnes / réservation</ion-card-title>
+            <div class="stat-title">👥 Moyenne personnes / réservation</div>
           </ion-card-header>
           <ion-card-content>
             <h2>{{ averagePeoplePerReservation }}</h2>

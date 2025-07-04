@@ -1,6 +1,6 @@
-import {Injectable} from '@angular/core';
 import {Storage} from '@ionic/storage-angular';
 import {UserPublic} from "../models/userPublic";
+import { Injectable } from '@angular/core';
 
 @Injectable({
   providedIn: 'root'
@@ -65,9 +65,13 @@ export class StorageService {
     return user;
   }
 
-  async removeUser(): Promise<void> {
-    this.userPublic = null;
-    await this.storage.remove(this.userKey);
+  getUserId(): string | null {
+    return this.userPublic?.id ?? null;
   }
+
+  getFullName(): string {
+    return this.userPublic ? `${this.userPublic.firstname} ${this.userPublic.lastname}` : '';
+  }
+
 
 }

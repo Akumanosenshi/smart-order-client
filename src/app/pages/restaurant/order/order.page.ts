@@ -1,8 +1,9 @@
-import {Component, OnInit} from '@angular/core';
-import {Order} from '../../../models/order';
-import {OrderService} from '../../../services/order.service';
-import {CommonModule, formatDate} from '@angular/common';
-import {IonicModule} from '@ionic/angular';
+import { Component, OnInit } from '@angular/core';
+import { Order } from '../../../models/order';
+import { OrderService } from '../../../services/order.service';
+import { CommonModule, formatDate } from '@angular/common';
+import { IonicModule } from '@ionic/angular';
+import { StorageService } from '../../../services/storage.service';
 
 @Component({
   selector: 'app-order',
@@ -14,45 +15,52 @@ import {IonicModule} from '@ionic/angular';
 export class OrderPage implements OnInit {
   futureOrders: Order[] = [];
   pastOrders: Order[] = [];
+  currentUserId: string = '';
+  currentUserName: string = '';
 
-  constructor(private orderService: OrderService) {
-  }
+  constructor(
+    private orderService: OrderService,
+    private storageService: StorageService
+  ) {}
 
-  ngOnInit() {
+  async ngOnInit() {
+    const user = await this.storageService.getUser();
+    if (user) {
+      this.currentUserId = user.id;
+    }
     this.loadOrders();
   }
 
-  nextState(current: 'PENDING' | 'IN_PROGRESS' | 'READY_FOR_PICKUP'): 'IN_PROGRESS' | 'READY_FOR_PICKUP' | 'COMPLETED' {
-    const stateFlow = ['PENDING', 'IN_PROGRESS', 'READY_FOR_PICKUP', 'COMPLETED'];
-    return stateFlow[stateFlow.indexOf(current) + 1] as any;
+  nextState(current: Order['state']): Order['state'] | null {
+    const states: Order['state'][] = ['PENDING', 'IN_PROGRESS', 'READY_FOR_PICKUP', 'COMPLETED'];
+    const index = states.indexOf(current);
+    return index !== -1 && index < states.length - 1 ? states[index + 1] : null;
   }
 
   async changeState(order: Order) {
-    const next = this.nextState(order.state as any);
+    const next = this.nextState(order.state);
     if (!next) return;
-
     await this.orderService.updateOrderState(order.id, next).toPromise();
-    this.loadOrders(); // recharge
+    this.loadOrders();
   }
 
   async cancelOrder(order: Order) {
-    const confirmCancel = confirm('Voulez-vous vraiment annuler cette commande ?');
-    if (confirmCancel) {
+    if (confirm('Voulez-vous vraiment annuler cette commande ?')) {
       await this.orderService.updateOrderState(order.id, 'CANCELLED').toPromise();
-      this.loadOrders(); // recharge
+      this.loadOrders();
     }
   }
 
   loadOrders() {
     this.orderService.getAllOrders().subscribe({
-      next: (orders) => {
-        console.log(orders);
-        const now = new Date();
-        this.futureOrders = orders.filter(o => ['PENDING', 'IN_PROGRESS', 'READY_FOR_PICKUP'].includes(o.state))
-          .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+      next: (orders: Order[]) => {
+        this.futureOrders = orders.filter(o =>
+          ['PENDING', 'IN_PROGRESS', 'READY_FOR_PICKUP'].includes(o.state)
+        ).sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
 
-        this.pastOrders = orders.filter(o => ['COMPLETED', 'CANCELLED'].includes(o.state))
-          .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+        this.pastOrders = orders.filter(o =>
+          ['COMPLETED', 'CANCELLED'].includes(o.state)
+        ).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
       },
       error: () => {
         this.futureOrders = [];

@@ -2,7 +2,6 @@ import {Component, Input} from '@angular/core';
 import {IonicModule, IonModal} from "@ionic/angular";
 import {FormsModule} from "@angular/forms";
 import {User} from "../../../models/user";
-import {UserService} from "../../../services/user.service";
 
 @Component({
   selector: 'app-register-modal',
@@ -22,9 +21,6 @@ export class RegisterModalComponent {
   confirmPassword: string = '';
 
   errorMessage: string = '';
-
-  constructor(protected userService: UserService) {
-  }
 
   register() {
     if (!this.validateInputs()) {

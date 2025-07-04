@@ -17,6 +17,10 @@ export class BookReservationModalComponent implements OnInit {
   reservationHour: string = '';
   numberOfPeople: number = 1;
   availableHours: string[] = [];
+  minDate: string = '';
+
+  userFirstname: string = '';
+  userLastname: string = '';
 
   constructor(
     private modalCtrl: ModalController,
@@ -25,13 +29,17 @@ export class BookReservationModalComponent implements OnInit {
     private storageService: StorageService
   ) {}
 
-  minDate: string = '';
-
   ngOnInit() {
     this.generateAvailableHours();
-    this.minDate = new Date().toISOString().split('T')[0]; // Format YYYY-MM-DD
-  }
+    this.minDate = new Date().toISOString().split('T')[0];
 
+    this.storageService.getUser().then(user => {
+      if (user) {
+        this.userFirstname = user.firstname;
+        this.userLastname = user.lastname;
+      }
+    });
+  }
 
   generateAvailableHours() {
     const startHour = 11;
@@ -56,9 +64,9 @@ export class BookReservationModalComponent implements OnInit {
   }
 
   async submitReservation() {
-    if (!this.reservationDate || !this.reservationHour) {
+    if (!this.reservationDate || !this.reservationHour || !this.userFirstname || !this.userLastname) {
       const toast = await this.toastCtrl.create({
-        message: 'Veuillez choisir une date et une heure.',
+        message: 'Tous les champs sont requis.',
         duration: 2000,
         color: 'danger',
       });
@@ -67,28 +75,24 @@ export class BookReservationModalComponent implements OnInit {
     }
 
     try {
-      // Extraire juste la date (YYYY-MM-DD)
-      const datePart = new Date(this.reservationDate).toISOString().split('T')[0]; // "2025-05-24"
-
-      // Concaténer avec l'heure choisie
-      const dateTimeString = `${datePart}T${this.reservationHour}:00Z`; // "2025-05-24T14:00:00Z"
-
-      // Vérifier si valide
-      const finalDate = new Date(dateTimeString);
-      if (isNaN(finalDate.getTime())) {
-        throw new Error("Date invalide");
-      }
-
       const user = await this.storageService.getUser();
+      if (!user || !user.id) throw new Error("Utilisateur non connecté");
+
+      const datePart = new Date(this.reservationDate).toISOString().split('T')[0];
+      const finalDate = new Date(`${datePart}T${this.reservationHour}:00Z`);
+      if (isNaN(finalDate.getTime())) throw new Error("Date invalide");
 
       const reservation = {
-        date: finalDate.toISOString(), // format ISO accepté par l’API
+        date: finalDate.toISOString(),
         nbrPeople: this.numberOfPeople,
-        user: user,
+        userId: user.id,
+        userFirstname: this.userFirstname,
+        userLastname: this.userLastname,
         validated: false,
       };
 
       await this.reservationService.createReservation(reservation);
+
       const toast = await this.toastCtrl.create({
         message: 'Réservation effectuée avec succès.',
         duration: 2000,
@@ -96,7 +100,7 @@ export class BookReservationModalComponent implements OnInit {
       });
       await toast.present();
       this.modalCtrl.dismiss();
-    } catch (error) {
+    } catch (err) {
       const toast = await this.toastCtrl.create({
         message: "Erreur lors de l'envoi de la réservation.",
         duration: 2000,
@@ -105,8 +109,6 @@ export class BookReservationModalComponent implements OnInit {
       await toast.present();
     }
   }
-
-
 
   closeModal() {
     this.modalCtrl.dismiss();

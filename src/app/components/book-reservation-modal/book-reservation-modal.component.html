@@ -8,6 +8,19 @@
 </ion-header>
 
 <ion-content class="ion-padding">
+
+  <!-- Prénom -->
+  <ion-item>
+    <ion-label position="stacked">Prénom</ion-label>
+    <ion-input [(ngModel)]="userFirstname" required></ion-input>
+  </ion-item>
+
+  <!-- Nom -->
+  <ion-item>
+    <ion-label position="stacked">Nom</ion-label>
+    <ion-input [(ngModel)]="userLastname" required></ion-input>
+  </ion-item>
+
   <!-- Date -->
   <ion-item>
     <ion-label position="stacked">Date</ion-label>
@@ -43,4 +56,5 @@
   <ion-button expand="block" color="success" (click)="submitReservation()">
     Valider la réservation
   </ion-button>
+
 </ion-content>

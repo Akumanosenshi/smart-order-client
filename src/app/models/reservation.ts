@@ -2,8 +2,11 @@ import {UserPublic} from "./userPublic";
 
 export interface Reservation {
   id: string;
-  date: string; // ISO date string
+  date: string;
   nbrPeople: number;
-  user: UserPublic;
+  userId: string;
+  userFirstname: string;
+  userLastname: string;
   validated: boolean;
 }
+
