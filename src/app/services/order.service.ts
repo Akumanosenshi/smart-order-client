@@ -25,6 +25,8 @@ export class OrderService {
 
     const payload = {
       userId: user.id,
+      userFirstname: user.firstname,
+      userLastname: user.lastname,
       meals: meals,
       date: date,
       total: total,
@@ -33,6 +35,7 @@ export class OrderService {
 
     return firstValueFrom(this.http.post(`${this.apiUrl}/Order`, payload));
   }
+
 
   updateOrderState(id: string, state: 'PENDING' | 'IN_PROGRESS' | 'READY_FOR_PICKUP' | 'COMPLETED' | 'CANCELLED') {
     return this.http.put(`${this.apiUrl}/Order/changeState?id=${id}&state=${state}`, null);

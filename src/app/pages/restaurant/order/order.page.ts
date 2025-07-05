@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Order } from '../../../models/order';
 import { OrderService } from '../../../services/order.service';
 import { CommonModule, formatDate } from '@angular/common';
@@ -12,11 +12,11 @@ import { StorageService } from '../../../services/storage.service';
   standalone: true,
   imports: [IonicModule, CommonModule]
 })
-export class OrderPage implements OnInit {
+export class OrderPage implements OnInit, OnDestroy {
   futureOrders: Order[] = [];
   pastOrders: Order[] = [];
   currentUserId: string = '';
-  currentUserName: string = '';
+  intervalId: any;
 
   constructor(
     private orderService: OrderService,
@@ -28,7 +28,19 @@ export class OrderPage implements OnInit {
     if (user) {
       this.currentUserId = user.id;
     }
+
     this.loadOrders();
+
+    // ➕ Démarre le polling toutes les 10 secondes
+    this.intervalId = setInterval(() => {
+      this.loadOrders();
+    }, 10000);
+  }
+
+  ngOnDestroy() {
+    if (this.intervalId) {
+      clearInterval(this.intervalId);
+    }
   }
 
   nextState(current: Order['state']): Order['state'] | null {
@@ -72,6 +84,4 @@ export class OrderPage implements OnInit {
   formatDate(date: string): string {
     return formatDate(date, 'dd/MM/yyyy HH:mm', 'fr-FR');
   }
-
-
 }

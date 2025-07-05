@@ -1,6 +1,6 @@
 <ion-header>
   <ion-toolbar color="light">
-    <ion-title>dashboard</ion-title>
+    <ion-title>SmartOrder</ion-title>
     <ion-button slot="end" fill="outline" color="primary" (click)="logout()">
       Déconnexion
     </ion-button>
@@ -8,44 +8,56 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar color="light">
-      <ion-title size="small">dashboard</ion-title>
-    </ion-toolbar>
-  </ion-header>
+
+  <ion-label color="primary" class="ion-text-center" style="font-size: 1.5rem; font-weight: 700; display: block; margin-top:1vh">
+    Recherche de statistiques
+  </ion-label>
 
   <ion-grid>
-    <!-- Sélection de dates -->
-    <ion-row>
-      <ion-col size="12" size-md="6">
-        <ion-item lines="none">
-          <ion-label position="stacked">Date de début</ion-label>
-          <ion-datetime
-            presentation="date"
-            [(ngModel)]="startDate"
-            prefer-wheel="false"
-          ></ion-datetime>
-        </ion-item>
+
+    <!-- Sélection de dates avec boutons -->
+    <ion-row class="ion-align-items-center ion-padding-bottom">
+      <!-- Bouton Date de début -->
+      <ion-col size="12" size-md="4">
+        <ion-button expand="block" fill="outline" (click)="openDatePicker('start')">
+          Date de début : {{ startDateDisplay || '__/__/____' }}
+        </ion-button>
       </ion-col>
 
-      <ion-col size="12" size-md="6">
-        <ion-item lines="none">
-          <ion-label position="stacked">Date de fin</ion-label>
-          <ion-datetime
-            presentation="date"
-            [(ngModel)]="endDate"
-            prefer-wheel="false"
-          ></ion-datetime>
-        </ion-item>
+      <!-- Bouton Date de fin -->
+      <ion-col size="12" size-md="4">
+        <ion-button expand="block" fill="outline" (click)="openDatePicker('end')">
+          Date de fin : {{ endDateDisplay || '__/__/____' }}
+        </ion-button>
+      </ion-col>
+
+      <!-- Bouton Rechercher -->
+      <ion-col size="12" size-md="4">
+        <ion-button expand="block" color="primary" (click)="loadTopMeals()">
+          Rechercher
+        </ion-button>
       </ion-col>
     </ion-row>
 
-    <!-- Bouton de recherche -->
-    <ion-row class="ion-justify-content-center ion-padding-vertical">
-      <ion-button expand="block" color="primary" (click)="loadTopMeals()">
-        Rechercher
-      </ion-button>
-    </ion-row>
+    <ion-popover
+      [isOpen]="showDatePicker"
+      (didDismiss)="closeDatePicker()"
+      style="--width: 90vw; --max-width: 400px; --min-width: 300px; --border-radius: 16px;">
+
+      <ng-template>
+        <ion-content class="ion-padding">
+          <ion-datetime
+            presentation="date"
+            [value]="tempDate"
+            (ionChange)="onDateSelected($event)">
+          </ion-datetime>
+
+          <ion-button expand="block" (click)="confirmDate()">Confirmer</ion-button>
+        </ion-content>
+      </ng-template>
+    </ion-popover>
+
+
 
     <!-- Top 5 des plats -->
     <ion-row>

@@ -1,9 +1,8 @@
-import {Component, OnInit} from '@angular/core';
-import {Reservation} from '../../../models/reservation';
-import {ReservationService} from '../../../services/reservation.service';
-import {CommonModule, formatDate} from '@angular/common';
-import {IonicModule} from '@ionic/angular';
-import { ToastController } from '@ionic/angular';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Reservation } from '../../../models/reservation';
+import { ReservationService } from '../../../services/reservation.service';
+import { CommonModule, formatDate } from '@angular/common';
+import { IonicModule, ToastController } from '@ionic/angular';
 
 @Component({
   selector: 'app-reservation',
@@ -12,22 +11,34 @@ import { ToastController } from '@ionic/angular';
   standalone: true,
   imports: [IonicModule, CommonModule]
 })
-export class ReservationPage implements OnInit {
+export class ReservationPage implements OnInit, OnDestroy {
   futureReservations: Reservation[] = [];
   pastReservations: Reservation[] = [];
+  intervalId: any;
 
-  constructor(private reservationService: ReservationService, private toastCtrl: ToastController) {
-  }
+  constructor(
+    private reservationService: ReservationService,
+    private toastCtrl: ToastController
+  ) {}
 
   ngOnInit() {
     this.loadReservations();
+
+    // 🔁 Rafraîchit les données toutes les 10 secondes
+    this.intervalId = setInterval(() => {
+      this.loadReservations();
+    }, 10000);
+  }
+
+  ngOnDestroy() {
+    if (this.intervalId) {
+      clearInterval(this.intervalId);
+    }
   }
 
   loadReservations() {
     this.reservationService.getAllReservations().subscribe({
       next: (reservations) => {
-        console.log('Données brutes:', reservations);
-
         const now = new Date();
         this.futureReservations = reservations.filter(res =>
           new Date(res.date) >= now
@@ -45,7 +56,7 @@ export class ReservationPage implements OnInit {
   }
 
   async validateReservation(res: Reservation) {
-    if (res.validated) return; // Ne rien faire si déjà validée
+    if (res.validated) return;
 
     try {
       await this.reservationService.validateReservation(res.id).toPromise();
@@ -57,7 +68,7 @@ export class ReservationPage implements OnInit {
       });
       await toast.present();
 
-      this.loadReservations(); // Recharge la liste mise à jour
+      this.loadReservations();
     } catch (error) {
       const toast = await this.toastCtrl.create({
         message: "Erreur lors de la validation.",
@@ -68,10 +79,7 @@ export class ReservationPage implements OnInit {
     }
   }
 
-
-
   formatDate(date: string): string {
     return formatDate(date, 'dd/MM/yyyy HH:mm', 'fr-FR');
   }
-
 }

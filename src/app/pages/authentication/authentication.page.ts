@@ -39,15 +39,20 @@ export class AuthenticationPage {
 
 
   register(registerData: any) {
+
     this.authService.register(registerData).subscribe({
-      next: () => {
+      next: async () => {
         this.registerModal?.dismiss(null, 'confirm');
-        this.router.navigate(['/']).catch(error => console.error('Erreur de redirection:', error));
+        console.log("Utilisateur inscrit et connecté avec succès");
+
       },
       error: err => {
         console.error('Échec de l’inscription:', err);
         this.errorMessage = 'Une erreur est survenue, veuillez réessayer.';
       }
     });
+
   }
+
+
 }

@@ -8,70 +8,103 @@
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
+
 <ion-content [fullscreen]="true">
   <ion-grid>
     <ion-row>
       <ion-col size="12" size-md="6">
         <ion-input
-          required="true"
+          required
           [(ngModel)]="registerUser.firstname"
           fill="outline"
           label="Prénom"
           labelPlacement="stacked"
           type="text"
-          placeholder="Votre prénom"></ion-input>
+          placeholder="Votre prénom">
+        </ion-input>
       </ion-col>
+
       <ion-col size="12" size-md="6">
         <ion-input
-          required="true"
+          required
           [(ngModel)]="registerUser.lastname"
-          autocapitalize="on"
           fill="outline"
           label="Nom"
           labelPlacement="stacked"
           type="text"
-          placeholder="Votre nom"></ion-input>
+          placeholder="Votre nom">
+        </ion-input>
       </ion-col>
     </ion-row>
-    <ion-row class="ion-justify-content-center">
-      <ion-col>
+
+    <ion-row>
+      <ion-col size="12">
         <ion-input
-          required="true"
+          required
           [(ngModel)]="registerUser.email"
           fill="outline"
           label="Adresse Email"
           labelPlacement="stacked"
           type="email"
-          placeholder="Entrez votre adresse email"></ion-input>
+          placeholder="Entrez votre adresse email">
+        </ion-input>
       </ion-col>
     </ion-row>
-    <ion-row class="ion-justify-content-center">
-      <ion-col>
+
+    <ion-row>
+      <ion-col size="12">
         <ion-input
-          required="true"
-          [(ngModel)]="registerUser.password"
+          required
+          [(ngModel)]="registerUser.mdp"
+          (ngModelChange)="updatePasswordStrength($event)"
           fill="outline"
           label="Mot de Passe"
           labelPlacement="stacked"
           type="password"
-          placeholder="Entrez votre mot de passe"></ion-input>
+          placeholder="Entrez votre mot de passe">
+        </ion-input>
+
+        <!-- Critères de sécurité -->
+        <ion-text color="medium" class="password-hints">
+          <ul style="padding-left: 1rem; font-size: 0.85rem;">
+            <li [style.color]="hasMinLength ? 'green' : 'red'">Au moins 8 caractères</li>
+            <li [style.color]="hasUppercase ? 'green' : 'red'">Une majuscule</li>
+            <li [style.color]="hasLowercase ? 'green' : 'red'">Une minuscule</li>
+            <li [style.color]="hasNumber ? 'green' : 'red'">Un chiffre</li>
+            <li [style.color]="hasSpecialChar ? 'green' : 'red'">Un caractère spécial</li>
+          </ul>
+        </ion-text>
       </ion-col>
     </ion-row>
-    <ion-row class="ion-justify-content-center">
-      <ion-col>
+
+    <ion-row>
+      <ion-col size="12">
         <ion-input
-          required="true"
+          required
           [(ngModel)]="confirmPassword"
           fill="outline"
-          label="Vérification Mot de Passe"
+          label="Confirmation du mot de passe"
           labelPlacement="stacked"
           type="password"
-          placeholder="Répétez votre mot de passe"></ion-input>
+          placeholder="Répétez votre mot de passe">
+        </ion-input>
       </ion-col>
     </ion-row>
-    <ion-row class="ion-justify-content-center">
+
+    <!-- Message d'erreur -->
+    <ion-row *ngIf="errorMessage">
       <ion-col>
-        <ion-button (click)="register()" color="primary">Inscription</ion-button>
+        <ion-text color="danger">
+          {{ errorMessage }}
+        </ion-text>
+      </ion-col>
+    </ion-row>
+
+    <ion-row class="ion-justify-content-center">
+      <ion-col size="12">
+        <ion-button expand="block" color="primary" (click)="register()">
+          Inscription
+        </ion-button>
       </ion-col>
     </ion-row>
   </ion-grid>

@@ -1,42 +1,47 @@
-import {Component, OnInit} from '@angular/core';
-import {IonicModule} from '@ionic/angular';
-import {AuthenticationService} from '../../../services/authentication.service';
-import {StatisticsService} from '../../../services/statistics.service';
-import {Meal} from '../../../models/meal';
-import {FormsModule} from "@angular/forms";
-import {CommonModule} from '@angular/common';
-
+import { Component, OnInit } from '@angular/core';
+import { IonicModule } from '@ionic/angular';
+import { AuthenticationService } from '../../../services/authentication.service';
+import { StatisticsService } from '../../../services/statistics.service';
+import { Meal } from '../../../models/meal';
+import { FormsModule } from "@angular/forms";
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.page.html',
   styleUrls: ['./dashboard.page.scss'],
+  standalone: true,
   imports: [IonicModule, FormsModule, CommonModule]
 })
 export class DashboardPage implements OnInit {
 
   topMeals: Meal[] = [];
-  startDate: string = new Date(Date.now()).toISOString();
-  endDate: string = new Date(Date.now()).toISOString();
+
+  // Dates
+  showDatePicker = false;
+  currentPicker: 'start' | 'end' = 'start';
+  tempDate: string = '';
+
+  startDate: string = '';
+  endDate: string = '';
+
+  // Statistiques
   totalOrders: number = 0;
   averageCart: number = 0;
   totalReservations: number = 0;
   averagePeoplePerReservation: number = 0;
 
-
   constructor(
     private authService: AuthenticationService,
     private statisticsService: StatisticsService
-  ) {
-  }
+  ) {}
 
   ngOnInit(): void {
+    // Initialiser les dates à aujourd’hui si nécessaire
     const now = new Date();
-    const formattedStart = this.startDate.split('T')[0] + 'T00:00:00Z';
-    const formattedEnd = this.endDate.split('T')[0] + 'T23:59:59Z';
-
-    console.log('Initialisation - startDate :', this.startDate);
-    console.log('Initialisation - endDate :', this.endDate);
+    const iso = now.toISOString().split('T')[0];
+    this.startDate = `${iso}T00:00:00Z`;
+    this.endDate = `${iso}T23:59:59Z`;
 
     this.loadTopMeals();
   }
@@ -45,22 +50,57 @@ export class DashboardPage implements OnInit {
     this.authService.logout();
   }
 
+  // Getter pour affichage bouton
+  get startDateDisplay(): string {
+    return this.formatDate(this.startDate);
+  }
+
+  get endDateDisplay(): string {
+    return this.formatDate(this.endDate);
+  }
+
+  // Format affichage JJ/MM/AAAA
+  formatDate(iso: string): string {
+    if (!iso) return '';
+    const date = new Date(iso);
+    return date.toLocaleDateString('fr-FR');
+  }
+
+  // Ouvrir le calendrier
+  openDatePicker(type: 'start' | 'end') {
+    this.currentPicker = type;
+    this.tempDate = type === 'start' ? this.startDate : this.endDate;
+    this.showDatePicker = true;
+  }
+
+  closeDatePicker() {
+    this.showDatePicker = false;
+  }
+
+  onDateSelected(event: any) {
+    this.tempDate = event.detail.value;
+  }
+
+  confirmDate() {
+    if (this.currentPicker === 'start') {
+      this.startDate = this.tempDate;
+    } else {
+      this.endDate = this.tempDate;
+    }
+    this.closeDatePicker();
+  }
 
   loadTopMeals() {
-    // 1. Convertir startDate / endDate en Date JS
+    if (!this.startDate || !this.endDate) return;
+
     const start = new Date(this.startDate);
     const end = new Date(this.endDate);
 
-    // 2. Forcer l'heure de début à 01:30:00Z comme dans ton exemple
-    start.setUTCHours(1, 30, 0, 0);  // 01:30:00.000Z
-    end.setUTCHours(23, 30, 0, 0);   // 23:30:00.000Z
+    start.setUTCHours(1, 30, 0, 0);
+    end.setUTCHours(23, 30, 0, 0);
 
-    // 3. Convertir au format ISO sans millisecondes
     const formattedStart = start.toISOString().split('.')[0] + 'Z';
     const formattedEnd = end.toISOString().split('.')[0] + 'Z';
-
-    console.log('Start:', formattedStart);
-    console.log('End:', formattedEnd);
 
     if (formattedStart > formattedEnd) {
       console.warn('⚠️ Date de début après la date de fin.');
@@ -69,7 +109,6 @@ export class DashboardPage implements OnInit {
 
     this.statisticsService.getStatistics(formattedStart, formattedEnd).subscribe({
       next: (data) => {
-        console.log('✅ Stats reçues :', data);
         this.topMeals = data.topMeals.slice(0, 5);
         this.totalOrders = data.totalOrders;
         this.averageCart = data.averageCart;
@@ -80,7 +119,5 @@ export class DashboardPage implements OnInit {
         console.error('❌ Erreur lors de la récupération des stats :', err);
       }
     });
-
-
   }
 }

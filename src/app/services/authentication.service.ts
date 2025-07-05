@@ -48,17 +48,25 @@ export class AuthenticationService {
     console.log('DEBUG_INFO: Request registration for: ', JSON.stringify(user));
     return this.http.post(`${this.apiUrl}/auth/register`, user).pipe(
       tap(async (response: any) => {
-        console.log('DEBUG_INFO: Received response for registration registration request: ', response);
+        console.log('DEBUG_INFO: Received response for registration request: ', response);
+
+        // 🟢 ENREGISTRER DANS LE STORAGE (exactement comme login)
         await this.storageService.setToken(response.token);
         await this.storageService.setRole(response.role);
         await this.storageService.setUser(response.user);
+
         this.authSubject.next(true);
-        console.log("Utilisateur enregistré avec succés: ", JSON.stringify(response))
-        this.router.navigate([await this.getRole() === 'RESTAURANT' ? '/tabs/restaurant/dashboard' : '/tabs/user/home'])
-          .catch(error => console.error('Erreur de redirection:', error));
+
+        // Redirection selon le rôle
+        this.router.navigate([
+          (await this.getRole()) === 'RESTAURANT'
+            ? '/tabs/restaurant/dashboard'
+            : '/tabs/user/home'
+        ]).catch(error => console.error('Erreur de redirection:', error));
       })
     );
   }
+
 
   async logout() {
     await this.storageService.removeToken();
