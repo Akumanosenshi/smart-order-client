@@ -1,36 +1,28 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>Une petite faim ?</ion-title>
-  </ion-toolbar>
-</ion-header>
+<ion-content fullscreen class="home-content">
 
-<ion-content class="ion-padding">
-
-  <!-- Boutons commander / réserver -->
-  <ion-grid>
-    <ion-row>
-      <ion-col size="6">
-        <ion-button expand="block" (click)="goTo('menu-user')">Commander</ion-button>
-      </ion-col>
-      <ion-col size="6">
-        <ion-button expand="block" (click)="goTo('reservation')">Réserver</ion-button>
-      </ion-col>
-    </ion-row>
-  </ion-grid>
+  <div class="bg-container">
+    <img src="/assets/img/meal.jpg" alt="Fond" />
+  </div>
 
 
-  <ion-button expand="block" (click)="goTo('menu-user')">Voir le menu</ion-button>
+  <div class="welcome-banner">
+    Bienvenue {{ firstName }}
+  </div>
+
+  <div class="center-zone">
+    <ion-button (click)="goToMenu()" expand="block" class="btn-menu">
+      Voir le menu
+    </ion-button>
+  </div>
 
 
-  <ion-grid>
-    <ion-row>
-      <ion-col size="6">
-        <ion-button expand="block" (click)="goTo('menu-user')">Commander</ion-button>
-      </ion-col>
-      <ion-col size="6">
-        <ion-button expand="block" (click)="openReservationModal()">Réserver</ion-button>
-      </ion-col>
-    </ion-row>
-  </ion-grid>
+  <div class="bottom-actions">
+    <ion-button (click)="goToOrder()" expand="block" class="btn-action">
+      Commander
+    </ion-button>
+    <ion-button (click)="openReservationModal()" expand="block" class="btn-action">
+      Réserver
+    </ion-button>
+  </div>
 
 </ion-content>

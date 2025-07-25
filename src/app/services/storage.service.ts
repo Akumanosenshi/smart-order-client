@@ -51,7 +51,7 @@ export class StorageService {
 
   async setUser(user: UserPublic): Promise<void> {
     this.userPublic = user;
-    console.log('[Storage] setUser ->', user); // ✅ Vérifie firstname/lastname ici
+    console.log('[Storage] setUser ->', user);
     await this.storage.set(this.userKey, user);
   }
 

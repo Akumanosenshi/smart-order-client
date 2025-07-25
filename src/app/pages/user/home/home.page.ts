@@ -1,30 +1,43 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { MealService } from '../../../services/meal.service';
-import { Meal } from '../../../models/meal';
-import { CommonModule } from '@angular/common';
 import {IonicModule, ModalController} from '@ionic/angular';
-import {
-  BookReservationModalComponent
-} from "../../../components/book-reservation-modal/book-reservation-modal.component";
+import { StorageService } from '../../../services/storage.service';
+import { BookReservationModalComponent } from '../../../components/book-reservation-modal/book-reservation-modal.component';
+import {CommonModule} from "@angular/common";
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.page.html',
   styleUrls: ['./home.page.scss'],
-  imports: [IonicModule, CommonModule],
+  imports: [
+    IonicModule,
+    CommonModule
+  ]
 })
 export class HomePage implements OnInit {
-  meals: Meal[] = [];
-  mealsByCategory: { [category: string]: Meal[] } = {};
+  firstName = '';
 
-  constructor(private router: Router, private mealService: MealService, private modalCtrl: ModalController) {}
+  constructor(
+    private router: Router,
+    private storageService: StorageService,
+    private modalCtrl: ModalController
+  ) {}
 
-  ngOnInit() {
-    this.mealService.getAllMeals().subscribe({
-      next: (data: Meal[]) => this.meals = data,
-      error: () => this.meals = []
-    });
+  ngOnInit(): void {
+    this.loadUser();
+  }
+
+  private async loadUser() {
+    const user = await this.storageService.getUser();
+    this.firstName = user?.firstname || 'Utilisateur';
+  }
+
+  goToMenu() {
+    this.router.navigate(['/tabs/user/menu-user']);
+  }
+
+  goToOrder() {
+    this.router.navigate(['/tabs/user/menu-user']);
   }
 
   async openReservationModal() {
@@ -34,8 +47,5 @@ export class HomePage implements OnInit {
     });
     await modal.present();
   }
-
-  goTo(path: string) {
-    this.router.navigate(['/tabs/user/' + path]);
-  }
 }
+

@@ -22,7 +22,6 @@
   --ion-color-success-tint: #1ac8a0;
 
   /* Arrière-plans */
-  --ion-background-color: #FAFAFA;
   --ion-text-color: #2E2E2E;
 
   $colors: (
@@ -43,10 +42,10 @@
   }
 
 
-  /* Arrondis modernes */
+  /* Arrondis  */
   $border-radius-base: 12px;
 
-  /* Typographie recommandée */
+  /* Typographie  */
   body {
     font-family: 'Roboto', 'Helvetica Neue', sans-serif;
   }

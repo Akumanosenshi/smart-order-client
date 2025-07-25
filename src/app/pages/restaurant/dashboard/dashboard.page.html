@@ -7,9 +7,13 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
+<ion-content fullscreen class="dashboard-content">
 
-  <ion-label color="primary" class="ion-text-center" style="font-size: 1.5rem; font-weight: 700; display: block; margin-top:1vh">
+  <!-- Titre de la page -->
+  <ion-label
+    color="primary"
+    class="ion-text-center"
+    style="font-size: 1.5rem; font-weight: 700; display: block; margin-top:1vh">
     Recherche de statistiques
   </ion-label>
 
@@ -19,31 +23,40 @@
     <ion-row class="ion-align-items-center ion-padding-bottom">
       <!-- Bouton Date de début -->
       <ion-col size="12" size-md="4">
-        <ion-button expand="block" fill="outline" (click)="openDatePicker('start')">
+        <ion-button
+          expand="block"
+          fill="outline"
+          (click)="openDatePicker('start')">
           Date de début : {{ startDateDisplay || '__/__/____' }}
         </ion-button>
       </ion-col>
 
       <!-- Bouton Date de fin -->
       <ion-col size="12" size-md="4">
-        <ion-button expand="block" fill="outline" (click)="openDatePicker('end')">
+        <ion-button
+          expand="block"
+          fill="outline"
+          (click)="openDatePicker('end')">
           Date de fin : {{ endDateDisplay || '__/__/____' }}
         </ion-button>
       </ion-col>
 
-      <!-- Bouton Rechercher -->
+      <!-- Bouton Rechercher (rafraîchir manuellement) -->
       <ion-col size="12" size-md="4">
-        <ion-button expand="block" color="primary" (click)="loadTopMeals()">
+        <ion-button
+          expand="block"
+          color="primary"
+          (click)="confirmDate()">
           Rechercher
         </ion-button>
       </ion-col>
     </ion-row>
 
+    <!-- Popover pour le datepicker -->
     <ion-popover
       [isOpen]="showDatePicker"
       (didDismiss)="closeDatePicker()"
       style="--width: 90vw; --max-width: 400px; --min-width: 300px; --border-radius: 16px;">
-
       <ng-template>
         <ion-content class="ion-padding">
           <ion-datetime
@@ -51,13 +64,10 @@
             [value]="tempDate"
             (ionChange)="onDateSelected($event)">
           </ion-datetime>
-
           <ion-button expand="block" (click)="confirmDate()">Confirmer</ion-button>
         </ion-content>
       </ng-template>
     </ion-popover>
-
-
 
     <!-- Top 5 des plats -->
     <ion-row>
@@ -81,7 +91,7 @@
       </ion-col>
     </ion-row>
 
-    <!-- Statistiques -->
+    <!-- Statistiques numériques -->
     <ion-row>
       <ion-col size="6" size-md="6">
         <ion-card class="stat-card">
@@ -127,5 +137,6 @@
         </ion-card>
       </ion-col>
     </ion-row>
+
   </ion-grid>
 </ion-content>

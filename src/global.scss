@@ -32,23 +32,5 @@
  * https://ionicframework.com/docs/theming/dark-mode
  */
 
-html, body {
-  background-color: #ffffff !important;
-  color: #000 !important;
-  color-scheme: light;
-}
 
-ion-app, ion-content {
-  --background: #ffffff !important;
-}
-
-
-ion-content {
-  --background: #ffffff !important;
-  color: #2E2E2E;
-}
-
-body {
-  color-scheme: light;
-}
 

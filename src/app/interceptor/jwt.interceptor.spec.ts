@@ -1,7 +1,10 @@
-import {JwtInterceptor} from './jwt.interceptor';
+import { JwtInterceptor } from './jwt.interceptor';
+import { AuthenticationService } from '../services/authentication.service';
 
 describe('JwtInterceptor', () => {
-  it('should create an instance', () => {
-    expect(new JwtInterceptor()).toBeTruthy();
+  it('devrait être créé', () => {
+    const mockAuthService = jasmine.createSpyObj('AuthenticationService', ['getToken']);
+    const interceptor = new JwtInterceptor(mockAuthService);
+    expect(interceptor).toBeTruthy();
   });
 });
