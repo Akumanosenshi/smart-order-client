@@ -1,9 +1,9 @@
-import {Component, Input} from '@angular/core';
-import {IonicModule, ModalController, ToastController} from '@ionic/angular';
-import {CartItem, CartService} from '../../services/cart.service';
-import {OrderService} from '../../services/order.service';
-import {CommonModule, DecimalPipe} from '@angular/common';
-import {FormsModule} from '@angular/forms';
+import { Component, Input, OnInit } from '@angular/core';
+import { IonicModule, ModalController, ToastController } from '@ionic/angular';
+import { CartItem, CartService } from '../../services/cart.service';
+import { OrderService } from '../../services/order.service';
+import { CommonModule, DecimalPipe } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-cart-modal',
@@ -16,51 +16,14 @@ import {FormsModule} from '@angular/forms';
     FormsModule
   ]
 })
-export class CartModalComponent {
+export class CartModalComponent implements OnInit {
   cart: CartItem[] = [];
   date: string = '';
   availableTimes: string[] = [];
   closingHour = '22:00';
+
+  /** Callback pour fermeture si fourni depuis l’appelant */
   @Input() onDismiss?: () => void;
-
-
-  ngOnInit() {
-    this.cartService.getCartObservable().subscribe(cart => {
-      this.cart = cart;
-    });
-
-    this.generateAvailableTimes();
-  }
-
-  generateAvailableTimes() {
-    const now = new Date();
-    const currentHour = now.getHours();
-    const currentMinutes = now.getMinutes();
-
-    const [closingHour, closingMinutes] = this.closingHour.split(':').map(Number);
-
-    const end = new Date();
-    end.setHours(closingHour, closingMinutes, 0, 0);
-
-    const times: string[] = [];
-
-    const slot = new Date();
-    if (currentMinutes < 30) {
-      slot.setMinutes(30, 0, 0);
-    } else {
-      slot.setHours(currentHour + 1, 0, 0, 0);
-    }
-
-    while (slot <= end) {
-      const hours = slot.getHours().toString().padStart(2, '0');
-      const minutes = slot.getMinutes().toString().padStart(2, '0');
-      times.push(`${hours}:${minutes}`);
-      slot.setMinutes(slot.getMinutes() + 30);
-    }
-
-    this.availableTimes = times;
-  }
-
 
   constructor(
     private cartService: CartService,
@@ -69,6 +32,40 @@ export class CartModalComponent {
     private modalCtrl: ModalController
   ) {
     this.cart = this.cartService.getCart();
+  }
+
+  ngOnInit() {
+    this.cartService.getCartObservable().subscribe(cart => {
+      this.cart = cart;
+    });
+    this.generateAvailableTimes();
+  }
+
+  generateAvailableTimes() {
+    const now = new Date();
+    const currentHour = now.getHours();
+    const currentMinutes = now.getMinutes();
+    const [closingHour, closingMinutes] = this.closingHour.split(':').map(Number);
+
+    const end = new Date();
+    end.setHours(closingHour, closingMinutes, 0, 0);
+
+    const times: string[] = [];
+    const slot = new Date();
+    if (currentMinutes < 30) {
+      slot.setMinutes(30, 0, 0);
+    } else {
+      slot.setHours(currentHour + 1, 0, 0, 0);
+    }
+
+    while (slot <= end) {
+      const hh = slot.getHours().toString().padStart(2, '0');
+      const mm = slot.getMinutes().toString().padStart(2, '0');
+      times.push(`${hh}:${mm}`);
+      slot.setMinutes(slot.getMinutes() + 30);
+    }
+
+    this.availableTimes = times;
   }
 
   changeQuantity(title: string, change: number) {
@@ -87,12 +84,10 @@ export class CartModalComponent {
 
   async validate() {
     const meals: any[] = this.cart
-      .map((item: CartItem) => Array(item.quantity).fill(item.meal))
+      .map(item => Array(item.quantity).fill(item.meal))
       .reduce((acc, val) => acc.concat(val), []);
-
     const total = this.getTotal();
 
-    // Convertir pickupTime (HH:mm) en datetime ISO du jour
     const [hours, minutes] = this.date.split(':').map(Number);
     const date = new Date();
     date.setHours(hours, minutes, 0);
@@ -107,20 +102,20 @@ export class CartModalComponent {
         duration: 2000,
         color: 'success'
       });
-      toast.present();
+      await toast.present();
+
       if (typeof this.onDismiss === 'function') {
         this.onDismiss();
       } else {
         this.modalCtrl.dismiss();
       }
-
     } catch (err) {
       const toast = await this.toastCtrl.create({
         message: 'Error while placing order',
         duration: 2000,
         color: 'danger'
       });
-      toast.present();
+      await toast.present();
     }
   }
 
@@ -130,6 +125,5 @@ export class CartModalComponent {
     } else {
       this.modalCtrl.dismiss();
     }
-
   }
 }

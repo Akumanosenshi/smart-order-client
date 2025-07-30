@@ -1,9 +1,9 @@
-import {Component, EventEmitter, OnInit, Output} from '@angular/core';
-import {MealService} from '../../../services/meal.service'; // adapte le chemin selon ton projet
-import {Meal} from '../../../models/meal'; // ton interface
-import {IonicModule, ModalController} from "@ionic/angular";
-import {FormsModule} from "@angular/forms";
-import {CommonModule} from "@angular/common";
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { MealService } from '../../../services/meal.service';
+import { Meal } from '../../../models/meal';
+import { IonicModule, ModalController } from "@ionic/angular";
+import { FormsModule } from "@angular/forms";
+import { CommonModule } from "@angular/common";
 
 @Component({
   selector: 'app-add-meal-modal',
@@ -13,8 +13,7 @@ import {CommonModule} from "@angular/common";
   styleUrls: ['./add-meal-modal.component.scss']
 })
 export class AddMealModalComponent implements OnInit {
-
-  @Output() close = new EventEmitter();
+  @Output() dismissed = new EventEmitter<void>();
 
   title = '';
   category = '';
@@ -23,21 +22,27 @@ export class AddMealModalComponent implements OnInit {
   price: number | null = null;
   categories: string[] = [];
   newCategory = false;
-  image = ''; // facultatif si pas utilisé
+  image = '';
 
-  emojis = ['🥗', '🍣', '🍜', '🍩', '🍰', '🍛', '🥘', '🍓', '🍒', '🍎', '🍉', '🍑', '🍊', '🥭', '🍍', '🌶️', '🧅', '🥦', '🫑', '🥑', '🍆', '🧇', '🥞', '🍳', '🥚', '🧀', '🥓', '🥩', '🍗', '🍔', '🌭', '🥪', '🥨', '🍟', '🌮', '🥘', '🍝', '🍛', '🍦', '🧁']; // Noto Color Emoji – catégorie nourriture
+  emojis = [
+    '🥗','🍣','🍜','🍩','🍰','🍛','🥘','🍓','🍒','🍎',
+    '🍉','🍑','🍊','🥭','🍍','🌶️','🧅','🥦','🫑','🥑',
+    '🍆','🧇','🥞','🍳','🥚','🧀','🥓','🥩','🍗','🍔',
+    '🌭','🥪','🥨','🍟','🌮','🥘','🍝','🍛','🍦','🧁'
+  ];
 
   apiUrl = 'http://localhost:8080/api';
   successMessage = '';
   errorMessage = '';
 
-  constructor(private mealService: MealService, private modalCtrl: ModalController) {
-  }
-
+  constructor(
+    private mealService: MealService,
+    private modalCtrl: ModalController
+  ) {}
 
   ngOnInit() {
     this.mealService.getCategories().subscribe({
-      next: (data) => this.categories = data,
+      next: data => this.categories = data,
       error: () => this.categories = []
     });
   }
@@ -59,7 +64,7 @@ export class AddMealModalComponent implements OnInit {
       description: this.description,
       emoji: this.emoji,
       image: this.image,
-      price: parseFloat(Number(this.price).toFixed(2))
+      price: parseFloat(this.price.toFixed(2))
     };
 
     this.mealService.addMeal(meal).subscribe({
@@ -75,16 +80,7 @@ export class AddMealModalComponent implements OnInit {
   }
 
   closeModal() {
-    if (this.close instanceof EventEmitter) {
-      this.close.emit();
-    } else {
-      this.modalCtrl.dismiss();
-    }
+    this.dismissed.emit();
+    // ou : this.modalCtrl.dismiss();
   }
-
 }
-
-
-
-
-
