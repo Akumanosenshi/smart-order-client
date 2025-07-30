@@ -34,6 +34,7 @@ export class DashboardPage implements OnInit, OnDestroy {
   averageCart = 0;
   totalReservations = 0;
   averagePeoplePerReservation = 0;
+  totalRevenue = 0;
 
   // Subscription pour le polling
   private pollingSub?: Subscription;
@@ -63,7 +64,7 @@ export class DashboardPage implements OnInit, OnDestroy {
           this.averageCart                 = data.averageCart;
           this.totalReservations           = data.totalReservations;
           this.averagePeoplePerReservation = data.averagePeoplePerReservation;
-        },
+          this.totalRevenue = data.totalRevenue;   },
         error: err => console.error('❌ Erreur stats polling :', err)
       });
   }
@@ -107,6 +108,7 @@ export class DashboardPage implements OnInit, OnDestroy {
         this.averageCart                 = data.averageCart;
         this.totalReservations           = data.totalReservations;
         this.averagePeoplePerReservation = data.averagePeoplePerReservation;
+        this.totalRevenue = data.totalRevenue;
       },
       error: err => console.error('❌ Erreur stats après changement de date :', err)
     });
@@ -114,12 +116,10 @@ export class DashboardPage implements OnInit, OnDestroy {
 
   /** Appelle l’API avec les dates formatées */
   private fetchStatistics() {
-    // Ajuster si besoin les heures pour couvrir la journée
+
     const start = new Date(this.startDate);
     const end   = new Date(this.endDate);
-    // Exemple d’ajustement si tu veux fixer les heures :
-    // start.setHours(0, 0, 0, 0);
-    // end.setHours(23, 59, 59, 999);
+
 
     const isoStart = start.toISOString();
     const isoEnd   = end.toISOString();

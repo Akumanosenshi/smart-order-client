@@ -13,8 +13,7 @@ describe('ReservationsModalComponent', () => {
     mockModalCtrl = jasmine.createSpyObj('ModalController', ['dismiss']);
 
     await TestBed.configureTestingModule({
-      imports: [IonicModule.forRoot(), CommonModule],
-      declarations: [ReservationsModalComponent],
+      imports: [IonicModule.forRoot(), CommonModule, ReservationsModalComponent],
       providers: [
         { provide: ModalController, useValue: mockModalCtrl }
       ]
@@ -22,7 +21,10 @@ describe('ReservationsModalComponent', () => {
 
     fixture = TestBed.createComponent(ReservationsModalComponent);
     component = fixture.componentInstance;
+    component.onDismiss = jasmine.createSpy('onDismiss'); // ✅ maintenant c’est bon
+    fixture.detectChanges();
   });
+
 
   it('devrait créer le composant', () => {
     expect(component).toBeTruthy();
@@ -57,6 +59,7 @@ describe('ReservationsModalComponent', () => {
 
   it('devrait fermer le modal avec close()', () => {
     component.close();
-    expect(mockModalCtrl.dismiss).toHaveBeenCalled();
+    expect(component.onDismiss).toHaveBeenCalled();
   });
+
 });

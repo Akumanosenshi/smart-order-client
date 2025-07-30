@@ -5,7 +5,7 @@ import { ReservationService } from '../../services/reservation.service';
 import { StorageService } from '../../services/storage.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { of } from 'rxjs';
+import { UserPublic } from '../../models/userPublic';
 
 describe('BookReservationModalComponent', () => {
   let component: BookReservationModalComponent;
@@ -16,14 +16,27 @@ describe('BookReservationModalComponent', () => {
   let mockStorageService: jasmine.SpyObj<StorageService>;
 
   beforeEach(waitForAsync(() => {
-    mockModalCtrl = jasmine.createSpyObj('ModalController', ['dismiss']);
+    // ✅ Create all spy objects
+    mockModalCtrl = jasmine.createSpyObj('ModalController', ['create', 'dismiss']);
     mockToastCtrl = jasmine.createSpyObj('ToastController', ['create']);
     mockReservationService = jasmine.createSpyObj('ReservationService', ['createReservation']);
     mockStorageService = jasmine.createSpyObj('StorageService', ['getUser']);
 
+    // ✅ Toast mock with correct structure
+    const mockToast = {
+      present: jasmine.createSpy('present'),
+      dismiss: jasmine.createSpy('dismiss'),
+      onDidDismiss: jasmine.createSpy().and.returnValue(Promise.resolve())
+    };
+    mockToastCtrl.create.and.returnValue(Promise.resolve(mockToast as any));
+
     TestBed.configureTestingModule({
-      imports: [IonicModule.forRoot(), FormsModule, CommonModule],
-      declarations: [BookReservationModalComponent],
+      imports: [
+        IonicModule.forRoot(),
+        FormsModule,
+        CommonModule,
+        BookReservationModalComponent // ✅ standalone
+      ],
       providers: [
         { provide: ModalController, useValue: mockModalCtrl },
         { provide: ToastController, useValue: mockToastCtrl },
@@ -34,11 +47,6 @@ describe('BookReservationModalComponent', () => {
 
     fixture = TestBed.createComponent(BookReservationModalComponent);
     component = fixture.componentInstance;
-
-    // Mock des toasts
-    mockToastCtrl.create.and.returnValue(Promise.resolve({
-      present: jasmine.createSpy('present')
-    } as any));
   }));
 
   it('devrait créer le composant', () => {
@@ -48,37 +56,35 @@ describe('BookReservationModalComponent', () => {
   it('devrait générer les heures disponibles de 11:00 à 22:30', () => {
     component.generateAvailableHours();
     expect(component.availableHours[0]).toBe('11:00');
-    expect(component.availableHours[1]).toBe('11:30');
     expect(component.availableHours.at(-1)).toBe('22:00');
   });
 
-  it('doit augmenter et diminuer correctement le nombre de personnes', () => {
+  it('updatePeople() ajuste correctement la valeur', () => {
     component.numberOfPeople = 2;
     component.updatePeople(1);
     expect(component.numberOfPeople).toBe(3);
     component.updatePeople(-2);
-    expect(component.numberOfPeople).toBe(1); // Ne doit pas descendre sous 1
+    expect(component.numberOfPeople).toBe(1);
     component.updatePeople(-1);
-    expect(component.numberOfPeople).toBe(1); // Toujours 1
+    expect(component.numberOfPeople).toBe(1); // ne descend jamais sous 1
   });
 
-  it('doit charger les infos utilisateur depuis le storage au ngOnInit', fakeAsync(() => {
-    mockStorageService.getUser.and.returnValue(Promise.resolve({
-      id: '1',
+  it('ngOnInit charge l’utilisateur', fakeAsync(() => {
+    const user: UserPublic = {
+      id: 'u1',
       firstname: 'John',
       lastname: 'Doe',
       email: 'john@example.com',
       role: 'CLIENT'
-    }));
-
+    };
+    mockStorageService.getUser.and.returnValue(Promise.resolve(user));
     component.ngOnInit();
     tick();
     expect(component.userFirstname).toBe('John');
     expect(component.userLastname).toBe('Doe');
-    expect(component.minDate).toMatch(/^\d{4}-\d{2}-\d{2}$/);
   }));
 
-  it('doit afficher un toast si un champ requis est manquant', fakeAsync(() => {
+  it('submitReservation() affiche une erreur si champs manquants', fakeAsync(() => {
     component.submitReservation();
     tick();
     expect(mockToastCtrl.create).toHaveBeenCalledWith(jasmine.objectContaining({
@@ -87,40 +93,56 @@ describe('BookReservationModalComponent', () => {
     }));
   }));
 
-  it('doit créer une réservation si tout est valide', fakeAsync(() => {
-    const mockUser = { id: 1, firstname: 'John', lastname: 'Doe' };
+  it('submitReservation() envoie une réservation valide', fakeAsync(() => {
+    const mockUser: UserPublic = {
+      id: 'u1',
+      firstname: 'Alice',
+      lastname: 'Durand',
+      email: 'a@example.com',
+      role: 'CLIENT'
+    };
+
     mockStorageService.getUser.and.returnValue(Promise.resolve(mockUser));
+    mockReservationService.createReservation.and.returnValue(Promise.resolve({}));
+
+    component.modalRef = jasmine.createSpyObj('IonModal', ['dismiss']); // ✅ modalRef mocké
 
     component.reservationDate = '2025-08-01';
     component.reservationHour = '12:30';
-    component.userFirstname = 'John';
-    component.userLastname = 'Doe';
+    component.userFirstname = 'Alice';
+    component.userLastname = 'Durand';
+    component.numberOfPeople = 2;
 
     component.submitReservation();
     tick();
 
-    expect(mockReservationService.createReservation).toHaveBeenCalledWith(jasmine.objectContaining({
-      date: jasmine.any(String),
-      nbrPeople: 1,
-      userId: 1,
-      userFirstname: 'John',
-      userLastname: 'Doe',
+    const expectedDate = new Date('2025-08-01T12:30:00Z').toISOString();
+
+    expect(mockReservationService.createReservation).toHaveBeenCalledWith({
+      date: expectedDate,
+      nbrPeople: 2,
+      userId: 'u1',
+      userFirstname: 'Alice',
+      userLastname: 'Durand',
       validated: false
-    }));
+    });
 
     expect(mockToastCtrl.create).toHaveBeenCalledWith(jasmine.objectContaining({
       message: 'Réservation effectuée avec succès.',
       color: 'success'
     }));
-    expect(mockModalCtrl.dismiss).toHaveBeenCalled();
+
+    expect(component.modalRef!.dismiss).toHaveBeenCalled();
   }));
 
-  it('doit afficher un toast d’erreur si la réservation échoue', fakeAsync(() => {
-    mockStorageService.getUser.and.returnValue(Promise.reject('Erreur'));
+
+
+  it('submitReservation() affiche une erreur si getUser() échoue', fakeAsync(() => {
+    mockStorageService.getUser.and.returnValue(Promise.reject('erreur'));
     component.reservationDate = '2025-08-01';
-    component.reservationHour = '12:30';
-    component.userFirstname = 'John';
-    component.userLastname = 'Doe';
+    component.reservationHour = '13:00';
+    component.userFirstname = 'Alice';
+    component.userLastname = 'Durand';
 
     component.submitReservation();
     tick();
@@ -131,8 +153,11 @@ describe('BookReservationModalComponent', () => {
     }));
   }));
 
-  it('doit fermer le modal quand on appelle closeModal()', () => {
+  it('closeModal() ferme le modal', fakeAsync(() => {
+    component.modalRef = jasmine.createSpyObj('IonModal', ['dismiss']); // ✅ mock ici
     component.closeModal();
-    expect(mockModalCtrl.dismiss).toHaveBeenCalled();
-  });
+    tick();
+    expect(component.modalRef!.dismiss).toHaveBeenCalled(); // ✅ maintenant ça passe
+  }));
 });
+

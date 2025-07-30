@@ -17,7 +17,7 @@ export class MenuPage implements OnInit {
   mealsByCategory: { [category: string]: Meal[] } = {};
 
   constructor(
-    private modalCtrl: ModalController,
+    protected modalCtrl: ModalController,
     private mealService: MealService
   ) {
   }

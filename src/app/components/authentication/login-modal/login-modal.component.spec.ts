@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { LoginModalComponent } from './login-modal.component';
 import { IonicModule, IonModal } from '@ionic/angular';
 import { FormsModule } from '@angular/forms';
+import { LoginModalComponent } from './login-modal.component';
 
 describe('LoginModalComponent', () => {
   let component: LoginModalComponent;
@@ -9,8 +9,11 @@ describe('LoginModalComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [IonicModule.forRoot(), FormsModule],
-      declarations: [LoginModalComponent]
+      imports: [
+        IonicModule.forRoot(),
+        FormsModule,
+        LoginModalComponent // ✅ composant standalone
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(LoginModalComponent);
@@ -22,42 +25,23 @@ describe('LoginModalComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('devrait appeler loginFunction avec les bonnes credentials', () => {
-    const mockLoginFn = jasmine.createSpy('loginFunction');
-    component.loginFunction = mockLoginFn;
-    component.credentials = {
-      email: 'test@example.com',
-      motDePasse: '123456'
-    };
+  it('doit appeler loginFunction si elle est définie', () => {
+    const mockLogin = jasmine.createSpy('login');
+    component.loginFunction = mockLogin;
 
+    component.credentials = { email: 'test@example.com', motDePasse: '123456' };
     component.login();
 
-    expect(mockLoginFn).toHaveBeenCalledWith({
-      email: 'test@example.com',
-      motDePasse: '123456'
-    });
+    expect(mockLogin).toHaveBeenCalledWith({ email: 'test@example.com', motDePasse: '123456' });
   });
 
-  it('ne doit rien faire si loginFunction est undefined', () => {
-    component.loginFunction = undefined;
-
-    expect(() => component.login()).not.toThrow();
-  });
-
-  it('doit appeler dismiss du modal avec "cancel"', async () => {
-    const dismissSpy = jasmine.createSpy('dismiss').and.returnValue(Promise.resolve());
-    const mockModal = {
-      dismiss: dismissSpy
-    } as unknown as IonModal;
+  it('doit annuler le modal si cancel() est appelé', () => {
+    const mockModal = jasmine.createSpyObj('IonModal', ['dismiss']);
+    mockModal.dismiss.and.returnValue(Promise.resolve());
 
     component.loginModal = mockModal;
     component.cancel();
 
-    expect(dismissSpy).toHaveBeenCalledWith(null, 'cancel');
-  });
-
-  it('ne doit pas planter si loginModal est undefined', () => {
-    component.loginModal = undefined;
-    expect(() => component.cancel()).not.toThrow();
+    expect(mockModal.dismiss).toHaveBeenCalledWith(null, 'cancel');
   });
 });

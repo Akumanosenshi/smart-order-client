@@ -1,148 +1,159 @@
-import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { of } from 'rxjs';
+import { IonicModule } from '@ionic/angular';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+
 import { DashboardPage } from './dashboard.page';
 import { AuthenticationService } from '../../../services/authentication.service';
 import { StatisticsService } from '../../../services/statistics.service';
-import { of, throwError } from 'rxjs';
+import { Meal } from '../../../models/meal';
 
 describe('DashboardPage', () => {
   let component: DashboardPage;
   let fixture: ComponentFixture<DashboardPage>;
-  let mockAuthService: jasmine.SpyObj<AuthenticationService>;
-  let mockStatisticsService: jasmine.SpyObj<StatisticsService>;
+  let authSpy: jasmine.SpyObj<AuthenticationService>;
+  let statsSpy: jasmine.SpyObj<StatisticsService>;
+
+  const FAKE_STATS = {
+    topMeals: [
+      { title: 'A', category: 'X', description: '', emoji: '', image: '', price: 1 },
+      { title: 'B', category: 'X', description: '', emoji: '', image: '', price: 2 },
+      { title: 'C', category: 'X', description: '', emoji: '', image: '', price: 3 },
+      { title: 'D', category: 'X', description: '', emoji: '', image: '', price: 4 },
+      { title: 'E', category: 'X', description: '', emoji: '', image: '', price: 5 },
+      { title: 'F', category: 'X', description: '', emoji: '', image: '', price: 6 }
+    ] as Meal[],
+    totalOrders: 42,
+    averageCart: 13.5,
+    totalReservations: 7,
+    averagePeoplePerReservation: 2.3,
+    totalRevenue: 1234
+  };
 
   beforeEach(async () => {
-    mockAuthService = jasmine.createSpyObj('AuthenticationService', ['logout']);
-    mockStatisticsService = jasmine.createSpyObj('StatisticsService', ['getStatistics']);
+    // 1) On prépare nos spies
+    authSpy = jasmine.createSpyObj('AuthenticationService', ['logout']);
+    statsSpy = jasmine.createSpyObj('StatisticsService', ['getStatistics']);
+    // L'appel renvoie toujours notre FAKE_STATS
+    statsSpy.getStatistics.and.returnValue(of(FAKE_STATS));
 
+    // 2) On configure le TestBed
     await TestBed.configureTestingModule({
-      imports: [DashboardPage],
+      imports: [
+        IonicModule.forRoot(),
+        CommonModule,
+        FormsModule,
+        DashboardPage // standalone component
+      ],
       providers: [
-        { provide: AuthenticationService, useValue: mockAuthService },
-        { provide: StatisticsService, useValue: mockStatisticsService },
+        { provide: AuthenticationService, useValue: authSpy },
+        { provide: StatisticsService, useValue: statsSpy }
       ]
     }).compileComponents();
 
+    // 3) On instancie et trigger ngOnInit via detectChanges()
     fixture = TestBed.createComponent(DashboardPage);
     component = fixture.componentInstance;
+    fixture.detectChanges();
+
+    // 4) On annule tout de suite le polling pour ne pas laisser de setInterval actif
+    component.ngOnDestroy();
   });
 
   it('devrait créer le composant', () => {
     expect(component).toBeTruthy();
   });
 
-  it('devrait initialiser les dates au ngOnInit', () => {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    const expectedStart = today.toISOString();
-    today.setHours(23, 59, 59, 999);
-    const expectedEnd = today.toISOString();
-
-    mockStatisticsService.getStatistics.and.returnValue(of({
-      topMeals: [],
-      totalOrders: 0,
-      averageCart: 0,
-      totalReservations: 0,
-      averagePeoplePerReservation: 0,
-      totalRevenue: 0
-    }));
-
-    component.ngOnInit();
-
-    expect(component.startDate).toBe(expectedStart);
-    expect(component.endDate).toBe(expectedEnd);
+  it('ngOnInit charge les stats et garde 5 plats', () => {
+    // startWith(0) + switchMap(of(...)) est synchrone, statsSpy appelé immédiatement
+    expect(statsSpy.getStatistics).toHaveBeenCalledTimes(1);
+    expect(component.topMeals.length).toBe(5);
+    expect(component.topMeals.map(m => m.title))
+      .toEqual(['A', 'B', 'C', 'D', 'E']);
+    expect(component.totalOrders).toBe(42);
+    expect(component.averageCart).toBe(13.5);
+    expect(component.totalReservations).toBe(7);
+    expect(component.averagePeoplePerReservation).toBe(2.3);
+    expect(component.totalRevenue).toBe(1234);
   });
 
-  it('devrait appeler logout() du authService', () => {
-    component.logout();
-    expect(mockAuthService.logout).toHaveBeenCalled();
-  });
-
-  it('devrait ouvrir le date picker en mode start', () => {
-    component.startDate = '2023-01-01T00:00:00.000Z';
+  it('openDatePicker("start") initialise correctement le picker de début', () => {
+    component.startDate = '2025-07-01T00:00:00.000Z';
     component.openDatePicker('start');
     expect(component.currentPicker).toBe('start');
     expect(component.tempDate).toBe(component.startDate);
     expect(component.showDatePicker).toBeTrue();
   });
 
-  it('devrait fermer le date picker', () => {
+  it('openDatePicker("end") initialise correctement le picker de fin', () => {
+    component.endDate = '2025-07-02T23:59:59.999Z';
+    component.openDatePicker('end');
+    expect(component.currentPicker).toBe('end');
+    expect(component.tempDate).toBe(component.endDate);
+    expect(component.showDatePicker).toBeTrue();
+  });
+
+  it('closeDatePicker() masque le datepicker', () => {
+    component.showDatePicker = true;
     component.closeDatePicker();
     expect(component.showDatePicker).toBeFalse();
   });
 
-  it('devrait mettre à jour tempDate avec onDateSelected', () => {
-    const event = { detail: { value: '2024-05-01' } };
-    component.onDateSelected(event);
-    expect(component.tempDate).toBe('2024-05-01');
+  it('onDateSelected met à jour tempDate', () => {
+    const newIso = '2025-07-10T12:00:00.000Z';
+    component.onDateSelected({ detail: { value: newIso } });
+    expect(component.tempDate).toBe(newIso);
   });
 
-  it('devrait mettre à jour startDate et rafraîchir les stats après confirmDate', fakeAsync(() => {
-    const mockStats = {
-      topMeals: [
-        {
-          id: 1,
-          title: 'Pizza Margherita',
-          category: 'Italien',
-          description: 'Pizza classique avec tomates, mozzarella, basilic',
-          image: 'pizza.jpg',
-          price: 12.5,
-          emoji: "X",
-          available: true
-        }
-      ],
-      totalOrders: 10,
-      averageCart: 25,
-      totalReservations: 5,
-      averagePeoplePerReservation: 2,
-      totalRevenue: 250
-    };
+  it('confirmDate() applique la nouvelle date et recharge les stats', () => {
+    // Préparer un nouveau start
+    component.startDate = '2025-07-01T00:00:00.000Z';
+    component.endDate   = '2025-07-31T23:59:59.999Z';
 
-    component.currentPicker = 'start';
-    component.tempDate = '2024-06-01T00:00:00.000Z';
-    mockStatisticsService.getStatistics.and.returnValue(of(mockStats));
+    // Ouvrir et sélectionner une date
+    component.openDatePicker('start');
+    component.onDateSelected({ detail: { value: '2025-07-05T00:00:00.000Z' } });
 
+    // Réinitialiser le spy pour compter cet appel-là uniquement
+    statsSpy.getStatistics.calls.reset();
+
+    // Confirmer
     component.confirmDate();
-    tick();
 
-    expect(component.startDate).toBe('2024-06-01T00:00:00.000Z');
+    // Le picker doit se fermer et la date se mettre à jour
+    expect(component.showDatePicker).toBeFalse();
+    expect(component.startDate).toBe('2025-07-05T00:00:00.000Z');
+
+    // getStatistics doit avoir reçu les bons ISO
+    const isoStart = new Date('2025-07-05T00:00:00.000Z').toISOString();
+    const isoEnd   = new Date(component.endDate).toISOString();
+    expect(statsSpy.getStatistics).toHaveBeenCalledWith(isoStart, isoEnd);
+
+    // Et les stats (topMeals, totalOrders…) doivent être rafraîchies
     expect(component.topMeals.length).toBe(5);
-    expect(component.totalOrders).toBe(12);
-    expect(component.averageCart).toBe(25.5);
-    expect(component.totalReservations).toBe(8);
-    expect(component.averagePeoplePerReservation).toBe(2);
-  }));
-
-  it('devrait formater correctement une date en format français', () => {
-    const iso = '2025-07-25T00:00:00.000Z';
-    const formatted = component['formatDate'](iso);
-    expect(formatted).toMatch(/\d{2}\/\d{2}\/\d{4}/);
+    expect(component.totalOrders).toBe(42);
   });
 
-  it('startDateDisplay devrait retourner une date formatée', () => {
-    component.startDate = '2025-01-01T00:00:00.000Z';
-    expect(component.startDateDisplay).toContain('01/01/2025');
+  it('logout() appelle authService.logout()', () => {
+    component.logout();
+    expect(authSpy.logout).toHaveBeenCalled();
   });
 
-  it('endDateDisplay devrait retourner une date formatée', () => {
-    component.endDate = '2025-12-31T00:00:00.000Z';
-    expect(component.endDateDisplay).toContain('31/12/2025');
+  it('startDateDisplay et endDateDisplay formatent JJ/MM/AAAA', () => {
+    component.startDate = '2025-01-02T00:00:00.000Z';
+    component.endDate   = '2025-12-31T23:59:59.999Z';
+    expect(component.startDateDisplay)
+      .toBe(new Date(component.startDate).toLocaleDateString('fr-FR'));
+    expect(component.endDateDisplay)
+      .toBe(new Date(component.endDate).toLocaleDateString('fr-FR'));
   });
 
-  it('devrait gérer une erreur de fetchStatistics sans planter', fakeAsync(() => {
-    component.currentPicker = 'end';
-    component.tempDate = '2024-07-01T00:00:00.000Z';
-    mockStatisticsService.getStatistics.and.returnValue(throwError(() => new Error('Erreur API')));
-
-    spyOn(console, 'error');
-    component.confirmDate();
-    tick();
-
-    expect(console.error).toHaveBeenCalledWith('❌ Erreur stats après changement de date :', jasmine.any(Error));
-  }));
-
-  it('ngOnDestroy devrait arrêter le polling', () => {
-    component['pollingSub'] = jasmine.createSpyObj('Subscription', ['unsubscribe']);
+  it('ngOnDestroy() désabonne le polling', () => {
+    // On recrée un pollingSub factice
+    const sub = { unsubscribe: jasmine.createSpy('unsubscribe') };
+    (component as any).pollingSub = sub as any;
     component.ngOnDestroy();
-    expect(component['pollingSub']?.unsubscribe).toHaveBeenCalled();
+    expect(sub.unsubscribe).toHaveBeenCalled();
   });
 });

@@ -1,4 +1,4 @@
-import {Component, EventEmitter, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {IonicModule, ModalController} from '@ionic/angular';
 import {FormsModule} from '@angular/forms';
 import {CommonModule} from '@angular/common';
@@ -19,6 +19,7 @@ export class PutMealModalComponent implements OnInit {
   titles: string[] = [];
   selectedTitle = '';
   selectedMeal: Meal | null = null;
+  @Input() onDismiss?: () => void;
 
   categories: string[] = [];
   newCategory = false;
@@ -96,6 +97,11 @@ export class PutMealModalComponent implements OnInit {
   }
 
   closeModal() {
-    this.modalCtrl.dismiss();
+    if (typeof this.onDismiss === 'function') {
+      this.onDismiss();
+    } else {
+      this.modalCtrl.dismiss();
+    }
   }
+
 }

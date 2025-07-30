@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {MealService} from '../../../services/meal.service';
 import {IonicModule, ModalController} from '@ionic/angular';
 import {CommonModule} from '@angular/common';
@@ -16,6 +16,7 @@ export class DeleteMealModalComponent implements OnInit {
   selectedTitle: string = '';
   successMessage = '';
   errorMessage = '';
+  @Input() onDismiss?: () => void;
 
   constructor(
     private mealService: MealService,
@@ -49,6 +50,10 @@ export class DeleteMealModalComponent implements OnInit {
   }
 
   closeModal() {
-    this.modalCtrl.dismiss();
+    if (typeof this.onDismiss === 'function') {
+      this.onDismiss();
+    } else {
+      this.modalCtrl.dismiss();
+    }
   }
 }

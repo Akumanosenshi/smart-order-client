@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { IonicModule, ModalController, ToastController } from '@ionic/angular';
+import { Component, Input, OnInit } from '@angular/core';
+import { IonicModule, IonModal, ToastController } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
 import { ReservationService } from '../../services/reservation.service';
 import { StorageService } from '../../services/storage.service';
@@ -13,17 +13,18 @@ import { FormsModule } from '@angular/forms';
   imports: [IonicModule, CommonModule, FormsModule],
 })
 export class BookReservationModalComponent implements OnInit {
-  reservationDate: string = '';
-  reservationHour: string = '';
-  numberOfPeople: number = 1;
-  availableHours: string[] = [];
-  minDate: string = '';
+  @Input() modalRef: IonModal | undefined;
 
-  userFirstname: string = '';
-  userLastname: string = '';
+  reservationDate = '';
+  reservationHour = '';
+  numberOfPeople = 1;
+  availableHours: string[] = [];
+  minDate = '';
+
+  userFirstname = '';
+  userLastname = '';
 
   constructor(
-    private modalCtrl: ModalController,
     private toastCtrl: ToastController,
     private reservationService: ReservationService,
     private storageService: StorageService
@@ -48,9 +49,7 @@ export class BookReservationModalComponent implements OnInit {
 
     for (let h = startHour; h <= endHour; h++) {
       intervals.push(`${h.toString().padStart(2, '0')}:00`);
-      if (h !== endHour) {
-        intervals.push(`${h.toString().padStart(2, '0')}:30`);
-      }
+      if (h !== endHour) intervals.push(`${h.toString().padStart(2, '0')}:30`);
     }
 
     this.availableHours = intervals;
@@ -58,9 +57,7 @@ export class BookReservationModalComponent implements OnInit {
 
   updatePeople(value: number) {
     const result = this.numberOfPeople + value;
-    if (result >= 1) {
-      this.numberOfPeople = result;
-    }
+    if (result >= 1) this.numberOfPeople = result;
   }
 
   async submitReservation() {
@@ -99,7 +96,8 @@ export class BookReservationModalComponent implements OnInit {
         color: 'success',
       });
       await toast.present();
-      this.modalCtrl.dismiss();
+
+      this.modalRef?.dismiss();
     } catch (err) {
       const toast = await this.toastCtrl.create({
         message: "Erreur lors de l'envoi de la réservation.",
@@ -111,6 +109,6 @@ export class BookReservationModalComponent implements OnInit {
   }
 
   closeModal() {
-    this.modalCtrl.dismiss();
+    this.modalRef?.dismiss();
   }
 }

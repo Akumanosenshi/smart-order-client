@@ -23,8 +23,7 @@ describe('PutMealModalComponent', () => {
     mockModalCtrl = jasmine.createSpyObj('ModalController', ['dismiss']);
 
     await TestBed.configureTestingModule({
-      imports: [IonicModule.forRoot(), FormsModule, CommonModule],
-      declarations: [PutMealModalComponent],
+      imports: [IonicModule.forRoot(), FormsModule, CommonModule, PutMealModalComponent],
       providers: [
         { provide: MealService, useValue: mockMealService },
         { provide: ModalController, useValue: mockModalCtrl }
@@ -33,6 +32,12 @@ describe('PutMealModalComponent', () => {
 
     fixture = TestBed.createComponent(PutMealModalComponent);
     component = fixture.componentInstance;
+    component.onDismiss = jasmine.createSpy('onDismiss');
+    mockMealService.getAllTitles.and.returnValue(of([]));
+    mockMealService.getCategories.and.returnValue(of([]));
+
+    fixture.detectChanges();
+
   });
 
   it('devrait créer le composant', () => {
@@ -162,6 +167,7 @@ describe('PutMealModalComponent', () => {
 
   it('doit fermer le modal', () => {
     component.closeModal();
-    expect(mockModalCtrl.dismiss).toHaveBeenCalled();
+    expect(component.onDismiss).toHaveBeenCalled();
   });
+
 });

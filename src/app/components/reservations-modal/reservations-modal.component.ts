@@ -15,6 +15,7 @@ export class ReservationsModalComponent implements OnInit {
 
   future: Reservation[] = [];
   past: Reservation[] = [];
+  @Input() onDismiss?: () => void;
 
   constructor(private modalCtrl: ModalController) {}
 
@@ -33,6 +34,11 @@ export class ReservationsModalComponent implements OnInit {
   }
 
   close() {
-    this.modalCtrl.dismiss();
+    if (typeof this.onDismiss === 'function') {
+      this.onDismiss();
+    } else {
+      this.modalCtrl.dismiss();
+    }
   }
+
 }

@@ -75,7 +75,11 @@ export class AddMealModalComponent implements OnInit {
   }
 
   closeModal() {
-    this.modalCtrl.dismiss();
+    if (this.close instanceof EventEmitter) {
+      this.close.emit();
+    } else {
+      this.modalCtrl.dismiss();
+    }
   }
 
 }

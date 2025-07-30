@@ -10,7 +10,7 @@ import {MenuPage} from "./menu/menu.page";
 import {OrderPage} from "./order/order.page";
 import {ReservationPage} from "./reservation/reservation.page";
 
-const routes: Routes = [
+export const routes: Routes = [
   {
     path: '',
     redirectTo: 'dashboard',

@@ -10,9 +10,12 @@ describe('RegisterModalComponent', () => {
   let fixture: ComponentFixture<RegisterModalComponent>;
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [IonicModule.forRoot(), FormsModule, CommonModule],
-      declarations: [RegisterModalComponent]
+      await TestBed.configureTestingModule({
+        imports: [
+          IonicModule.forRoot(),
+          FormsModule,
+          RegisterModalComponent
+        ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(RegisterModalComponent);
