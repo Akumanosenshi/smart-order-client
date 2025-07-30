@@ -15,12 +15,17 @@ describe('AddMealModalComponent', () => {
 
   beforeEach(async () => {
     mockMealService = jasmine.createSpyObj('MealService', ['getCategories', 'addMeal']);
-    mockModalCtrl = jasmine.createSpyObj('ModalController', ['dismiss']);
+    mockModalCtrl    = jasmine.createSpyObj('ModalController', ['dismiss']);
 
     await TestBed.configureTestingModule({
-      imports: [IonicModule.forRoot(), FormsModule, CommonModule, AddMealModalComponent],
+      imports: [
+        IonicModule.forRoot(),
+        FormsModule,
+        CommonModule,
+        AddMealModalComponent  // composant standalone
+      ],
       providers: [
-        { provide: MealService, useValue: mockMealService },
+        { provide: MealService,    useValue: mockMealService },
         { provide: ModalController, useValue: mockModalCtrl }
       ]
     }).compileComponents();
@@ -30,10 +35,10 @@ describe('AddMealModalComponent', () => {
 
     mockMealService.getCategories.and.returnValue(of([]));
 
-    spyOn(component.close, 'emit');
+    // On espionne la nouvelle sortie "dismissed"
+    spyOn(component.dismissed, 'emit');
     fixture.detectChanges();
   });
-
 
   it('devrait créer le composant', () => {
     expect(component).toBeTruthy();
@@ -99,7 +104,6 @@ describe('AddMealModalComponent', () => {
       image: 'burger.jpg',
       price: 12
     }));
-
     expect(component.successMessage).toContain('ajouté avec succès');
     expect(component.errorMessage).toBe('');
   }));
@@ -120,9 +124,8 @@ describe('AddMealModalComponent', () => {
     expect(component.successMessage).toBe('');
   }));
 
-  it('doit fermer le modal', () => {
+  it('doit fermer le modal via la sortie dismissed', () => {
     component.closeModal();
-    expect(component.close.emit).toHaveBeenCalled();
+    expect(component.dismissed.emit).toHaveBeenCalled();
   });
-
 });
