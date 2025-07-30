@@ -2,7 +2,8 @@ import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testin
 import { TabsPage } from './tabs.page';
 import { AuthenticationService } from '../services/authentication.service';
 import { Router } from '@angular/router';
-import { of } from 'rxjs';
+import { IonicModule, NavController } from '@ionic/angular';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 describe('TabsPage', () => {
   let component: TabsPage;
@@ -13,16 +14,19 @@ describe('TabsPage', () => {
   beforeEach(async () => {
     authServiceSpy = jasmine.createSpyObj('AuthenticationService', ['getRole']);
     routerSpy = jasmine.createSpyObj('Router', ['navigate']);
-
-    // stub navigate to return a resolved promise
     routerSpy.navigate.and.returnValue(Promise.resolve(true));
 
     await TestBed.configureTestingModule({
       declarations: [TabsPage],
+      imports: [
+        IonicModule.forRoot()   // <- on importe IonicModule
+      ],
       providers: [
         { provide: AuthenticationService, useValue: authServiceSpy },
-        { provide: Router, useValue: routerSpy }
-      ]
+        { provide: Router,                useValue: routerSpy },
+        { provide: NavController,         useValue: {} }        // <- stub NavController
+      ],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA]  // <- autorise les Web Components Ionic
     }).compileComponents();
 
     fixture = TestBed.createComponent(TabsPage);
@@ -33,60 +37,52 @@ describe('TabsPage', () => {
     expect(component).toBeTruthy();
   });
 
-  it('ionViewWillEnter pour un utilisateur NON-admin configure les onglets user', fakeAsync(() => {
-    // Arrange
+  it('ionViewWillEnter pour un CLIENT configure les onglets user', fakeAsync(() => {
     authServiceSpy.getRole.and.returnValue(Promise.resolve('CLIENT'));
 
-    // Act
     component.ionViewWillEnter();
-    // first await this.isAdmin() → microtask
-    tick();
-    // then await router.navigate → microtask
-    tick();
+    tick(); // résout getRole()
+    tick(); // résout router.navigate()
 
-    // Assert
     expect(component.isUser).toBeTrue();
     expect(component.appTabs).toEqual([
-      { title: 'Accueil',       url: '/tabs/user/home',      icon: 'home'   },
-      { title: 'Menu',          url: '/tabs/user/menu-user', icon: 'person' },
-      { title: 'Profil',        url: '/tabs/user/profil',    icon: 'person' }
+      { title: 'Accueil', url: '/tabs/user/home',      icon: 'home'   },
+      { title: 'Menu',    url: '/tabs/user/menu-user', icon: 'person' },
+      { title: 'Profil',  url: '/tabs/user/profil',    icon: 'person' }
     ]);
     expect(routerSpy.navigate).toHaveBeenCalledWith(['/tabs/user/home']);
   }));
 
-  it('ionViewWillEnter pour un admin configure les onglets restaurant', fakeAsync(() => {
-    // Arrange
+  it('ionViewWillEnter pour un RESTAURANT configure les onglets restaurant', fakeAsync(() => {
     authServiceSpy.getRole.and.returnValue(Promise.resolve('RESTAURANT'));
 
-    // Act
     component.ionViewWillEnter();
     tick();
     tick();
 
-    // Assert
     expect(component.isUser).toBeFalse();
     expect(component.appTabs).toEqual([
-      { title: 'Dashboard',     url: '/tabs/restaurant/dashboard',   icon: 'stats-chart' },
-      { title: 'Menu',          url: '/tabs/restaurant/menu',        icon: 'business'    },
-      { title: 'Commandes',     url: '/tabs/restaurant/order',       icon: 'cash'        },
-      { title: 'Résérvations',  url: '/tabs/restaurant/reservation', icon: 'people'      }
+      { title: 'Dashboard',    url: '/tabs/restaurant/dashboard',   icon: 'stats-chart' },
+      { title: 'Menu',         url: '/tabs/restaurant/menu',        icon: 'business'    },
+      { title: 'Commandes',    url: '/tabs/restaurant/order',       icon: 'cash'        },
+      { title: 'Résérvations', url: '/tabs/restaurant/reservation', icon: 'people'      }
     ]);
     expect(routerSpy.navigate).toHaveBeenCalledWith(['/tabs/restaurant/dashboard']);
   }));
 
-  it('isAdmin() doit retourner true si le rôle est RESTAURANT', fakeAsync(() => {
+  it('isAdmin() retourne true pour RESTAURANT', fakeAsync(() => {
     authServiceSpy.getRole.and.returnValue(Promise.resolve('RESTAURANT'));
-    let result: boolean | undefined;
-    component.isAdmin().then(res => result = res);
+    let result: boolean;
+    component.isAdmin().then(r => result = r);
     tick();
-    expect(result).toBeTrue();
+    expect(result!).toBeTrue();
   }));
 
-  it('isAdmin() doit retourner false sinon', fakeAsync(() => {
+  it('isAdmin() retourne false sinon', fakeAsync(() => {
     authServiceSpy.getRole.and.returnValue(Promise.resolve('CLIENT'));
-    let result: boolean | undefined;
-    component.isAdmin().then(res => result = res);
+    let result: boolean;
+    component.isAdmin().then(r => result = r);
     tick();
-    expect(result).toBeFalse();
+    expect(result!).toBeFalse();
   }));
 });
