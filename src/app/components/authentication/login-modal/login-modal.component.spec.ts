@@ -12,7 +12,7 @@ describe('LoginModalComponent', () => {
       imports: [
         IonicModule.forRoot(),
         FormsModule,
-        LoginModalComponent // ✅ composant standalone
+        LoginModalComponent
       ]
     }).compileComponents();
 

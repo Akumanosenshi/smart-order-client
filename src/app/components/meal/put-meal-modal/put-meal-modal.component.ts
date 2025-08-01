@@ -95,8 +95,7 @@ export class PutMealModalComponent implements OnInit {
     if (typeof this.onDismiss === 'function') {
       this.onDismiss();
     } else {
-      this.dismissed.emit();
-      // ou : this.modalCtrl.dismiss();
+      this.modalCtrl.dismiss();
     }
   }
 }

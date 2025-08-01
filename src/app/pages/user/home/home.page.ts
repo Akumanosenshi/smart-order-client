@@ -46,6 +46,7 @@ export class HomePage implements OnInit {
       cssClass: 'book-reservation-modal'
     });
     await modal.present();
+    await modal.onDidDismiss();
   }
 }
 

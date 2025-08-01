@@ -119,7 +119,7 @@ export class CartModalComponent implements OnInit {
     }
   }
 
-  close() {
+  cancel() {
     if (typeof this.onDismiss === 'function') {
       this.onDismiss();
     } else {

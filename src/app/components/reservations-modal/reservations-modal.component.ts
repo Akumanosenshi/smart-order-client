@@ -12,18 +12,16 @@ import { Reservation } from '../../models/reservation';
 })
 export class ReservationsModalComponent implements OnInit {
   @Input() reservations: Reservation[] = [];
-
+  @Input() onDismiss?: () => void;
   future: Reservation[] = [];
   past: Reservation[] = [];
-  @Input() onDismiss?: () => void;
 
   constructor(private modalCtrl: ModalController) {}
 
   ngOnInit() {
     const now = new Date();
-
     this.future = this.reservations.filter(r => new Date(r.date) >= now);
-    this.past = this.reservations.filter(r => new Date(r.date) < now);
+    this.past   = this.reservations.filter(r => new Date(r.date) <  now);
   }
 
   formatDate(date: string): string {
@@ -33,12 +31,11 @@ export class ReservationsModalComponent implements OnInit {
     });
   }
 
-  close() {
+  cancel() {
     if (typeof this.onDismiss === 'function') {
       this.onDismiss();
     } else {
       this.modalCtrl.dismiss();
     }
   }
-
 }

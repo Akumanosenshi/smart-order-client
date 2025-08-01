@@ -1,11 +1,12 @@
 import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { CartModalComponent } from './cart-modal.component';
-import { IonicModule, ModalController, ToastController } from '@ionic/angular';
+import {IonicModule, IonModal, ModalController, ToastController} from '@ionic/angular';
 import { FormsModule } from '@angular/forms';
 import { CommonModule, DecimalPipe } from '@angular/common';
 import { of } from 'rxjs';
 import { CartService, CartItem } from '../../services/cart.service';
 import { OrderService } from '../../services/order.service';
+import {Input} from "@angular/core";
 
 describe('CartModalComponent', () => {
   let component: CartModalComponent;
@@ -14,6 +15,7 @@ describe('CartModalComponent', () => {
   let mockOrderService: jasmine.SpyObj<OrderService>;
   let mockToastCtrl: jasmine.SpyObj<ToastController>;
   let mockModalCtrl: jasmine.SpyObj<ModalController>;
+
 
   beforeEach(async () => {
     mockCartService = jasmine.createSpyObj('CartService', [
@@ -26,13 +28,6 @@ describe('CartModalComponent', () => {
 
     mockOrderService = jasmine.createSpyObj('OrderService', ['sendOrder']);
     mockToastCtrl = jasmine.createSpyObj('ToastController', ['create']);
-
-    mockModalCtrl = {
-      dismiss: jasmine.createSpy('dismiss').and.returnValue(Promise.resolve(true))
-    } as any;
-
-
-
 
     mockCartService.getCart.and.returnValue([]);
     mockCartService.getCartObservable.and.returnValue(of([]));
@@ -136,7 +131,7 @@ describe('CartModalComponent', () => {
       message: 'Order placed successfully!',
       color: 'success'
     }));
-    component.close();
+    component.cancel();
     tick();
     expect(component.onDismiss).toHaveBeenCalled();
 
@@ -170,7 +165,7 @@ describe('CartModalComponent', () => {
   }));
 
   it('devrait fermer le modal', fakeAsync(() => {
-    component.close();
+    component.cancel();
     tick();
     expect(component.onDismiss).toHaveBeenCalled();
 

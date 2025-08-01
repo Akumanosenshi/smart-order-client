@@ -1,0 +1,9 @@
+services:
+  frontend:
+    image: smart-order-client-frontend:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8100:80"
+    restart: unless-stopped

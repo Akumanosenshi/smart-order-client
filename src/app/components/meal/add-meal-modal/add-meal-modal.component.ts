@@ -1,7 +1,7 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import { MealService } from '../../../services/meal.service';
 import { Meal } from '../../../models/meal';
-import { IonicModule, ModalController } from "@ionic/angular";
+import {IonicModule, IonModal, ModalController} from "@ionic/angular";
 import { FormsModule } from "@angular/forms";
 import { CommonModule } from "@angular/common";
 
@@ -13,7 +13,6 @@ import { CommonModule } from "@angular/common";
   styleUrls: ['./add-meal-modal.component.scss']
 })
 export class AddMealModalComponent implements OnInit {
-  @Output() dismissed = new EventEmitter<void>();
 
   title = '';
   category = '';
@@ -23,6 +22,9 @@ export class AddMealModalComponent implements OnInit {
   categories: string[] = [];
   newCategory = false;
   image = '';
+
+  @Input() onDismiss?: () => void;
+
 
   emojis = [
     '🥗','🍣','🍜','🍩','🍰','🍛','🥘','🍓','🍒','🍎',
@@ -79,8 +81,11 @@ export class AddMealModalComponent implements OnInit {
     });
   }
 
-  closeModal() {
-    this.dismissed.emit();
-    // ou : this.modalCtrl.dismiss();
+  cancel() {
+    if (typeof this.onDismiss === 'function') {
+      this.onDismiss();
+    } else {
+      this.modalCtrl.dismiss();
+    }
   }
 }

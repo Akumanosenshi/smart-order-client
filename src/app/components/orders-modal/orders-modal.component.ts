@@ -36,7 +36,6 @@ export class OrdersModalComponent implements OnInit {
     } else {
       this.modalCtrl.dismiss();
     }
-
   }
 
   formatDate(dateStr: string): string {

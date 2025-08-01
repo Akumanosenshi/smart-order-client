@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { IonicModule, IonModal, ToastController } from '@ionic/angular';
+import {IonicModule, IonModal, ModalController, ToastController} from '@ionic/angular';
 import { CommonModule } from '@angular/common';
 import { ReservationService } from '../../services/reservation.service';
 import { StorageService } from '../../services/storage.service';
@@ -24,7 +24,10 @@ export class BookReservationModalComponent implements OnInit {
   userFirstname = '';
   userLastname = '';
 
+  @Input() onDismiss?: () => void;
+
   constructor(
+    private modalController: ModalController,
     private toastCtrl: ToastController,
     private reservationService: ReservationService,
     private storageService: StorageService
@@ -109,6 +112,10 @@ export class BookReservationModalComponent implements OnInit {
   }
 
   closeModal() {
-    this.modalRef?.dismiss();
+    if (typeof this.onDismiss === 'function') {
+      this.onDismiss();
+    } else {
+      this.modalController.dismiss();
+    }
   }
 }

@@ -2,7 +2,7 @@
   <ion-toolbar>
     <ion-title>Ajouter un plat</ion-title>
     <ion-buttons slot="end">
-      <ion-button (click)="closeModal()">Fermer</ion-button>
+      <ion-button (click)="cancel()">Fermer</ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
@@ -52,11 +52,11 @@
 
   <ion-text color="success" *ngIf="successMessage">
     <p>{{ successMessage }}</p>
-    <ion-button (click)="closeModal()">Fermer</ion-button>
+    <ion-button (click)="cancel()">Fermer</ion-button>
   </ion-text>
 
   <ion-text color="danger" *ngIf="errorMessage">
     <p>{{ errorMessage }}</p>
-    <ion-button (click)="closeModal()">Fermer</ion-button>
+    <ion-button (click)="cancel()">Fermer</ion-button>
   </ion-text>
 </ion-content>
