@@ -58,7 +58,7 @@ describe('ReservationsModalComponent', () => {
   });
 
   it('devrait fermer le modal avec close()', () => {
-    component.close();
+    component.cancel();
     expect(component.onDismiss).toHaveBeenCalled();
   });
 
