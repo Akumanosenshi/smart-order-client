@@ -45,6 +45,7 @@ describe('BookReservationModalComponent', () => {
       ]
     }).compileComponents();
 
+
     fixture = TestBed.createComponent(BookReservationModalComponent);
     component = fixture.componentInstance;
   }));
@@ -153,11 +154,14 @@ describe('BookReservationModalComponent', () => {
     }));
   }));
 
-  it('closeModal() ferme le modal', fakeAsync(() => {
-    component.modalRef = jasmine.createSpyObj('IonModal', ['dismiss']); // ✅ mock ici
+  it('doit annuler le modal si cancel() est appelé', () => {
+    const mockModal = jasmine.createSpyObj('IonModal', ['dismiss']);
+    mockModal.dismiss.and.returnValue(Promise.resolve());
+
+    component.bookReservationModal = mockModal;
     component.closeModal();
-    tick();
-    expect(component.modalRef!.dismiss).toHaveBeenCalled(); // ✅ maintenant ça passe
-  }));
+
+    expect(mockModal.dismiss).toHaveBeenCalledWith(null, 'cancel');
+  });
 });
 

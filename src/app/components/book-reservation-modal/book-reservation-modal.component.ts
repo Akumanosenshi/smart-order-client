@@ -14,6 +14,7 @@ import { FormsModule } from '@angular/forms';
 })
 export class BookReservationModalComponent implements OnInit {
   @Input() modalRef: IonModal | undefined;
+  @Input() bookReservationModal: IonModal | undefined;
 
   reservationDate = '';
   reservationHour = '';
@@ -25,7 +26,6 @@ export class BookReservationModalComponent implements OnInit {
   userLastname = '';
 
   @Input() onDismiss?: () => void;
-
   constructor(
     private modalController: ModalController,
     private toastCtrl: ToastController,
@@ -112,10 +112,6 @@ export class BookReservationModalComponent implements OnInit {
   }
 
   closeModal() {
-    if (typeof this.onDismiss === 'function') {
-      this.onDismiss();
-    } else {
-      this.modalController.dismiss();
-    }
+    this.bookReservationModal?.dismiss(null, 'cancel').then();
   }
 }

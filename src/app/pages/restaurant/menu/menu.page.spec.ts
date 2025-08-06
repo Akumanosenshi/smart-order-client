@@ -22,10 +22,14 @@ describe('MenuPage', () => {
   };
 
   beforeEach(waitForAsync(async () => {
-    // Mock du service MealService
-    mockMealService = jasmine.createSpyObj('MealService', ['getAllMeals']);
-    mockMealService.getAllMeals.and.returnValue(of([]));
-
+      // Mock du service MealService (inclut maintenant getAllTitles pour DeleteMealModalComponent)
+        mockMealService = jasmine.createSpyObj('MealService', [
+          'getAllMeals',
+          'getAllTitles'
+       ]);
+      // stub des deux méthodes
+        mockMealService.getAllMeals.and.returnValue(of([]));
+     mockMealService.getAllTitles.and.returnValue(of([]));
     // Mock du ModalController
     modalCtrlSpy = jasmine.createSpyObj('ModalController', ['create']);
     modalCtrlSpy.create.and.returnValue(Promise.resolve(mockModal as any));
